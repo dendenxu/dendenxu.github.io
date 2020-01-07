@@ -176,7 +176,7 @@ body {
 body {
   background: #eee;
   color: #555;
-  font-family: 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
+  font-family: 'Cabin', 'Microsoft JhengHei', 'Source Sans Pro', 'Calibri', 'Candara', 'Arial', 'PingFang SC', sans-serif;
   font-size: 1em;
   line-height: 2;
 }
@@ -192,7 +192,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Alatsi', 'Microsoft Yahei', 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
+  font-family: 'Alatsi', 'Microsoft Yahei', 'Cabin', 'Microsoft JhengHei', 'Source Sans Pro', 'Calibri', 'Candara', 'Arial', 'PingFang SC', sans-serif;
   font-weight: bold;
   line-height: 1.5;
   margin: 20px 0 15px;
@@ -392,7 +392,7 @@ pre {
 }
 pre,
 code {
-  font-family: 'Cascadia Code', consolas, Menlo, monospace, 'Microsoft JhengHei', 'PingFang SC';
+  font-family: 'Cascadia Code', consolas, Menlo, monospace, 'Microsoft JhengHei', 'Source Sans Pro', 'Calibri', 'Candara', 'Arial', 'PingFang SC';
 }
 code {
   background: #eee;
@@ -992,7 +992,7 @@ pre .javascript .function {
 }
 .site-title {
   display: inline-block;
-  font-family: 'Alatsi', 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
+  font-family: 'Alatsi', 'Cabin', 'Microsoft JhengHei', 'Source Sans Pro', 'Calibri', 'Candara', 'Arial', 'PingFang SC', sans-serif;
   font-size: 1.375em;
   font-weight: normal;
   line-height: 1.5;
@@ -1178,7 +1178,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #0fff75;
+  background: #b5ff9a;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1519,7 +1519,7 @@ pre .javascript .function {
   }
 }
 .post-body {
-  font-family: 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
+  font-family: 'Cabin', 'Microsoft JhengHei', 'Source Sans Pro', 'Calibri', 'Candara', 'Arial', 'PingFang SC', sans-serif;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
@@ -1823,7 +1823,7 @@ pre .javascript .function {
 }
 .posts-expand .post-meta {
   color: #999;
-  font-family: 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
+  font-family: 'Cabin', 'Microsoft JhengHei', 'Source Sans Pro', 'Calibri', 'Candara', 'Arial', 'PingFang SC', sans-serif;
   font-size: 0.75em;
   margin: 3px 0 60px 0;
   text-align: center;
@@ -2612,5 +2612,4 @@ ul.breadcrumb li + li:last-child {
 }
 .mermaid {
   background: #fff;
-  margin: 0 auto;
 }
