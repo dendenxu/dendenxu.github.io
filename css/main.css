@@ -1,31 +1,31 @@
 @font-face {
   font-family: 'Microsoft JhengHei';
   font-weight: normal;
-  src: src('/fonts/msjh.ttc'), local('Microsoft JhengHei');
+  src: url("../fonts/msjh.ttc") format('truetype'), local('Microsoft JhengHei');
 }
 @font-face {
   font-family: 'Microsoft JhengHei';
   font-weight: 200;
-  src: src('/fonts/msjhl.ttc'), local('Microsoft JhengHei');
+  src: url("../fonts/msjhl.ttc") format('truetype'), local('Microsoft JhengHei');
 }
 @font-face {
   font-family: 'Microsoft JhengHei';
   font-weight: bold;
-  src: src('/fonts/msjhbd.ttc'), local('Microsoft JhengHei');
+  src: url("../fonts/msjhbd.ttc") format('truetype'), local('Microsoft JhengHei');
 }
 @font-face {
   font-family: 'Alatsi';
-  src: src('/fonts/Alatsi-Regular.ttf'), local('Alatsi');
+  src: url("../fonts/Alatsi-Regular.ttf") format('truetype'), local('Alatsi');
 }
 @font-face {
   font-family: 'Cabin';
   font-weight: normal;
-  src: src('/fonts/Cabin-Regular.ttf'), local('Cabin');
+  src: url("../fonts/Cabin-Regular.ttf") format('truetype'), local('Cabin');
 }
 @font-face {
   font-family: 'Cabin';
   font-weight: bold;
-  src: src('/fonts/Cabin-Bold.ttf'), local('Cabin');
+  src: url("../fonts/Cabin-Bold.ttf") format('truetype'), local('Cabin');
 }
 html {
   line-height: 1.15; /* 1 */
@@ -1188,7 +1188,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #034181;
+  background: #70e046;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
