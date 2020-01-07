@@ -1,31 +1,31 @@
 @font-face {
   font-family: 'Microsoft JhengHei';
   font-weight: normal;
-  src: local('/fonts/msjh.ttc');
+  src: src('/fonts/msjh.ttc'), local('Microsoft JhengHei');
 }
 @font-face {
   font-family: 'Microsoft JhengHei';
   font-weight: 200;
-  src: local('/fonts/msjhl.ttc');
+  src: src('/fonts/msjhl.ttc'), local('Microsoft JhengHei');
 }
 @font-face {
   font-family: 'Microsoft JhengHei';
   font-weight: bold;
-  src: local('/fonts/msjhbd.ttc');
+  src: src('/fonts/msjhbd.ttc'), local('Microsoft JhengHei');
 }
 @font-face {
   font-family: 'Alatsi';
-  src: local('/fonts/Alatsi-Regular.ttf');
+  src: src('/fonts/Alatsi-Regular.ttf'), local('Alatsi');
 }
 @font-face {
   font-family: 'Cabin';
   font-weight: normal;
-  src: local('/fonts/Cabin-Regular.ttf');
+  src: src('/fonts/Cabin-Regular.ttf'), local('Cabin');
 }
 @font-face {
   font-family: 'Cabin';
   font-weight: bold;
-  src: local('/fonts/Cabin-Bold.ttf');
+  src: src('/fonts/Cabin-Bold.ttf'), local('Cabin');
 }
 html {
   line-height: 1.15; /* 1 */
@@ -1188,7 +1188,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #9396ff;
+  background: #ffff7d;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
