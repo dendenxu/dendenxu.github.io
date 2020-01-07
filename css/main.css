@@ -1,4 +1,9 @@
 @font-face {
+  font-family: 'Microsoft JhengHei';
+  font-weight: normal;
+  src: url("../fonts/msjh.ttf") format('truetype'), local('Microsoft JhengHei');
+}
+@font-face {
   font-family: 'Cascadia Code';
   font-weight: normal;
   src: url("../fonts/Cascadia.ttf") format('truetype'), local('Cascadia Code');
@@ -1178,7 +1183,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #b5ff9a;
+  background: #ebffc7;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
