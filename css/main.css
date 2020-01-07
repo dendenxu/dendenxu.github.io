@@ -1,29 +1,29 @@
 @font-face {
-  font-family: "Microsoft JhengHei";
+  font-family: 'Microsoft JhengHei';
   font-weight: normal;
   src: local('/fonts/msjh.ttc');
 }
 @font-face {
-  font-family: "Microsoft JhengHei";
+  font-family: 'Microsoft JhengHei';
   font-weight: 200;
   src: local('/fonts/msjhl.ttc');
 }
 @font-face {
-  font-family: "Microsoft JhengHei";
+  font-family: 'Microsoft JhengHei';
   font-weight: bold;
   src: local('/fonts/msjhbd.ttc');
 }
 @font-face {
-  font-family: "Alatsi";
+  font-family: 'Alatsi';
   src: local('/fonts/Alatsi-Regular.ttf');
 }
 @font-face {
-  font-family: "Cabin";
+  font-family: 'Cabin';
   font-weight: normal;
   src: local('/fonts/Cabin-Regular.ttf');
 }
 @font-face {
-  font-family: "Cabin";
+  font-family: 'Cabin';
   font-weight: bold;
   src: local('/fonts/Cabin-Bold.ttf');
 }
@@ -186,7 +186,7 @@ body {
 body {
   background: #eee;
   color: #555;
-  font-family: 'Cabin', "Microsoft JhengHei", "PingFang SC", sans-serif;
+  font-family: 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
   font-size: 1em;
   line-height: 2;
 }
@@ -202,7 +202,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Alatsi', "Microsoft Yahei", 'Cabin', "Microsoft JhengHei", "PingFang SC", sans-serif;
+  font-family: 'Alatsi', 'Microsoft Yahei', 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
   font-weight: bold;
   line-height: 1.5;
   margin: 20px 0 15px;
@@ -402,7 +402,7 @@ pre {
 }
 pre,
 code {
-  font-family: 'Cascadia Code', consolas, Menlo, monospace, "Microsoft JhengHei", "PingFang SC";
+  font-family: 'Cascadia Code', consolas, Menlo, monospace, 'Microsoft JhengHei', 'PingFang SC';
 }
 code {
   background: #eee;
@@ -1002,7 +1002,7 @@ pre .javascript .function {
 }
 .site-title {
   display: inline-block;
-  font-family: 'Alatsi', 'Cabin', "Microsoft JhengHei", "PingFang SC", sans-serif;
+  font-family: 'Alatsi', 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
   font-size: 1.375em;
   font-weight: normal;
   line-height: 1.5;
@@ -1188,7 +1188,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #033653;
+  background: #9396ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1529,7 +1529,7 @@ pre .javascript .function {
   }
 }
 .post-body {
-  font-family: 'Cabin', "Microsoft JhengHei", "PingFang SC", sans-serif;
+  font-family: 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
@@ -1833,7 +1833,7 @@ pre .javascript .function {
 }
 .posts-expand .post-meta {
   color: #999;
-  font-family: 'Cabin', "Microsoft JhengHei", "PingFang SC", sans-serif;
+  font-family: 'Cabin', 'Microsoft JhengHei', 'PingFang SC', sans-serif;
   font-size: 0.75em;
   margin: 3px 0 60px 0;
   text-align: center;
@@ -2619,4 +2619,8 @@ ul.breadcrumb li + li:last-child {
   .pagination {
     margin: 8px 0 0;
   }
+}
+.mermaid {
+  background-color: #fff;
+  margin: 0 auto;
 }
