@@ -1188,7 +1188,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffff7d;
+  background: #034181;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2621,6 +2621,6 @@ ul.breadcrumb li + li:last-child {
   }
 }
 .mermaid {
-  background-color: #fff;
+  background: #fff;
   margin: 0 auto;
 }
