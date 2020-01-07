@@ -1,17 +1,12 @@
 @font-face {
   font-family: 'Microsoft JhengHei';
   font-weight: normal;
-  src: url("../fonts/msjh.ttc") format('truetype'), local('Microsoft JhengHei');
+  src: url("../fonts/msjh.ttf") format('truetype'), local('Microsoft JhengHei');
 }
 @font-face {
-  font-family: 'Microsoft JhengHei';
-  font-weight: 200;
-  src: url("../fonts/msjhl.ttc") format('truetype'), local('Microsoft JhengHei');
-}
-@font-face {
-  font-family: 'Microsoft JhengHei';
-  font-weight: bold;
-  src: url("../fonts/msjhbd.ttc") format('truetype'), local('Microsoft JhengHei');
+  font-family: 'Cascadia Code';
+  font-weight: normal;
+  src: url("../fonts/Cascadia.ttf") format('truetype'), local('Cascadia Code');
 }
 @font-face {
   font-family: 'Alatsi';
@@ -1188,7 +1183,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #17390f;
+  background: #ff900e;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
