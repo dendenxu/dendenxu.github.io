@@ -2,21 +2,21 @@
   font-family: 'Alatsi';
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/alatsi.eot");
+  src: url("../fonts/alatsi.woff2"), local('Alatsi');
   src: url("../fonts/alatsi.eot?#iefix") format('embedded-opentype'), url("../fonts/alatsi.woff2") format('woff2'), url("../fonts/alatsi.woff") format('woff'), url("../fonts/alatsi.ttf") format('truetype'), url("../fonts/alatsi.svg#alatsiregular") format('svg');
 }
 @font-face {
   font-family: 'Cabin';
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/cabin.eot");
+  src: url("../fonts/cabin.woff2"), local('Cabin');
   src: url("../fonts/cabin.eot?#iefix") format('embedded-opentype'), url("../fonts/cabin.woff2") format('woff2'), url("../fonts/cabin.woff") format('woff'), url("../fonts/cabin.ttf") format('truetype'), url("../fonts/cabin.svg#cabinregular") format('svg');
 }
 @font-face {
   font-family: 'Cascadia Code';
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/cascadia.eot");
+  src: url("../fonts/cascadia.woff2"), local('Cascadia Code');
   src: url("../fonts/cascadia.eot?#iefix") format('embedded-opentype'), url("../fonts/cascadia.woff2") format('woff2'), url("../fonts/cascadia.woff") format('woff'), url("../fonts/cascadia.ttf") format('truetype'), url("../fonts/cascadia.svg#cascadia_coderegular") format('svg');
 }
 html {
@@ -1212,7 +1212,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #3374ac;
+  background: #ffffed;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
