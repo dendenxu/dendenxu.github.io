@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://dendenxu.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":"default","style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Note for C Primer Plus1. PRIu16In .\data_and_c\altnames.c, a weird thing about using macro of inttypes.h happened. When I attempted to print an uint16_t using PRIu16, number 4294967295 appeared on the">
+<meta property="og:type" content="article">
+<meta property="og:title" content="note-C-Primer-Plus">
+<meta property="og:url" content="http://dendenxu.github.io/2020/01/08/note-C-Primer-Plus/index.html">
+<meta property="og:site_name" content="dendenxu">
+<meta property="og:description" content="Note for C Primer Plus1. PRIu16In .\data_and_c\altnames.c, a weird thing about using macro of inttypes.h happened. When I attempted to print an uint16_t using PRIu16, number 4294967295 appeared on the">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-01-08T02:28:59.705Z">
+<meta property="article:modified_time" content="2020-01-08T02:30:49.552Z">
+<meta property="article:author" content="dendenxu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://dendenxu.github.io/2020/01/08/note-C-Primer-Plus/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>note-C-Primer-Plus | dendenxu</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dendenxu</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://dendenxu.github.io/2020/01/08/note-C-Primer-Plus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="dendenxu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dendenxu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          note-C-Primer-Plus
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-01-08 10:28:59 / Modified: 10:30:49" itemprop="dateCreated datePublished" datetime="2020-01-08T10:28:59+08:00">2020-01-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Note-for-C-Primer-Plus"><a href="#Note-for-C-Primer-Plus" class="headerlink" title="Note for C Primer Plus"></a>Note for C Primer Plus</h1><h2 id="1-PRIu16"><a href="#1-PRIu16" class="headerlink" title="1. PRIu16"></a>1. PRIu16</h2><p>In <code>.\data_and_c\altnames.c</code>, a weird thing about using macro of <code>inttypes.h</code> happened. When I attempted to print an uint16_t using PRIu16, number 4294967295 appeared on the screen. After checking the <code>inttypes.h</code> file, the macro was like:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PRIu16 <span class="meta-string">"hd"</span></span></span><br></pre></td></tr></table></figure>
+
+<p>But when I try to use:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"%"</span><span class="string">"hd"</span>,j);</span><br></pre></td></tr></table></figure>
+
+<p>Number 65535 appears on the screen.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;inttypes.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">uint16_t</span> j = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">16</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j *= <span class="number">2</span>;</span><br><span class="line">    &#125;<span class="comment">//j should now be 65536(if allowed) or zero.</span></span><br><span class="line">    <span class="comment">// j--;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%"</span> PRIu16, j - <span class="number">1</span>); <span class="comment">//Weird things happened here.</span></span><br><span class="line">    <span class="comment">// j--;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n%hu"</span>, j - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*output:</span></span><br><span class="line"><span class="comment">4294967295</span></span><br><span class="line"><span class="comment">65535</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-Long-Double-of-GCC"><a href="#2-Long-Double-of-GCC" class="headerlink" title="2. Long Double of GCC"></a>2. Long Double of GCC</h2><p>Still in last directory, some problem occurred when trying to print a long double using <code>%Lf</code> and <code>%Le</code>. Compiling with <code>gcc 8.1.0</code>, I got an odd number on my shell, while I get it right with Visual Studio 2017. After checking, I found that <code>sizeof(long double)</code> was 16 compiling with <code>gcc</code>, rather than 8 in vs2017. And that raised the problem of printing 16-sized number. Code listed:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">float</span> aboat = <span class="number">32000.0</span>;</span><br><span class="line">    <span class="keyword">double</span> abet = <span class="number">2.14e9</span>;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">double</span> dip = <span class="number">1.</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%f can be written %e\n"</span>, aboat, aboat);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%f can be written %e\n"</span>, abet, abet);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%f can be written %e\n"</span>, <span class="number">1.</span>, <span class="number">1.</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%Lf can be written %Le\n"</span>, dip, dip);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d %d %d"</span>, <span class="keyword">sizeof</span>(<span class="keyword">float</span>), <span class="keyword">sizeof</span>(<span class="keyword">double</span>), <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>));</span><br><span class="line">    <span class="comment">// printf("Hello, world");</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* output in gcc</span></span><br><span class="line"><span class="comment">32000.000000 can be written 3.200000e+004</span></span><br><span class="line"><span class="comment">2140000000.000000 can be written 2.140000e+009</span></span><br><span class="line"><span class="comment">1.000000 can be written 1.000000e+000</span></span><br><span class="line"><span class="comment">0.000000 can be written 3.172882e-317</span></span><br><span class="line"><span class="comment">4 8 16</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/*output in vs2017</span></span><br><span class="line"><span class="comment">32000.000000 can be written 3.200000e+04</span></span><br><span class="line"><span class="comment">2140000000.000000 can be written 2.140000e+09</span></span><br><span class="line"><span class="comment">1.000000 can be written 1.000000e+00</span></span><br><span class="line"><span class="comment">0.000053 can be written 5.320000e-05</span></span><br><span class="line"><span class="comment">4 8 8</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>What’s more interesting is that for format specifier %e, gcc gives me three exponent, while vs2017 gives me two.</p>
+<h2 id="3-Variable-Arguments"><a href="#3-Variable-Arguments" class="headerlink" title="3. Variable Arguments"></a>3. Variable Arguments</h2><p>Another question occurred when I tried to use variable arguments. In <code>..\qianhuiSmall\variable_arguments.c</code>, using</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">va_start(ap,cnt);</span><br><span class="line">va_list(ap,<span class="keyword">int</span>);</span><br></pre></td></tr></table></figure>
+
+<p>I successfully acquired data from the four parameters I sent to this function. While in C Primer Plus, the book said when the “type” in <code>va_list()</code> is wrongly given, following arguments will be wrongly taken too. Code below:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdarg.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> cnt, ...)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    va_list args;</span><br><span class="line">    va_start(args, cnt);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cnt; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> j = va_arg(args, <span class="keyword">int</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%#llx\n"</span>, j);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">floatcnv</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">float</span> n1 = <span class="number">3.0</span>;</span><br><span class="line">    <span class="keyword">double</span> n2 = <span class="number">3.0</span>;</span><br><span class="line">    <span class="keyword">long</span> n3 = <span class="number">2000000000</span>;</span><br><span class="line">    <span class="keyword">long</span> n4 = <span class="number">1234567890</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"\n%.1e %.1e %.1e %.1e\n"</span>, n1, n2, n3, n4);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%ld %ld\n"</span>, n3, n4);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%ld %ld %ld %ld\n"</span>, n1, n2, n3, n4);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> a = <span class="number">0xeeeaaeeefffeefff</span>;</span><br><span class="line">    <span class="keyword">char</span> b = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">double</span> c;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld*%lld*%lld\n"</span>, a, a, a);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld*%lld*%lld\n"</span>, b, b, b);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(a));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">double</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>));</span><br><span class="line">    func(<span class="number">4</span>, a, a, a, a);</span><br><span class="line">    <span class="keyword">int</span> n3 = <span class="number">10</span>, n4 = <span class="number">12</span>;</span><br><span class="line">    <span class="keyword">double</span> n1 = <span class="number">100.34</span>, n2 = <span class="number">122.55</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, <span class="built_in">printf</span>(<span class="string">"%d %d %d %d\n"</span>, n1, n2, n3, n4));</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">28</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">putchar</span>(<span class="string">'*'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    floatcnv();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*output on my system using LLVM-clang 7.0.0</span></span><br><span class="line"><span class="comment">-1230979206612062209*-1230979206612062209*-1230979206612062209</span></span><br><span class="line"><span class="comment">10*10*10</span></span><br><span class="line"><span class="comment">8</span></span><br><span class="line"><span class="comment">8</span></span><br><span class="line"><span class="comment">16</span></span><br><span class="line"><span class="comment">0xfffffffffffeefff</span></span><br><span class="line"><span class="comment">0xfffffffffffeefff</span></span><br><span class="line"><span class="comment">0xfffffffffffeefff</span></span><br><span class="line"><span class="comment">0xfffffffffffeefff</span></span><br><span class="line"><span class="comment">-1889785610 858993459 10 12</span></span><br><span class="line"><span class="comment">28</span></span><br><span class="line"><span class="comment">****************************</span></span><br><span class="line"><span class="comment">3.0e+000 3.0e+000 9.9e-315 7.0e-310</span></span><br><span class="line"><span class="comment">2000000000 1234567890</span></span><br><span class="line"><span class="comment">0 0 2000000000 1234567890</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*his out put of floatcnv()</span></span><br><span class="line"><span class="comment">3.0e+00 3.0e+00 3.1e+46 1.7e+266</span></span><br><span class="line"><span class="comment">2000000000 1234567890</span></span><br><span class="line"><span class="comment">0 1074266112 0 1074266112</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>This means my system successfully acquired the size of the variables I sent, both in my own function or in the <code>printf()</code> function. Now that’s a little curious, how did it managed that?</p>
+<h2 id="4-L-R-value"><a href="#4-L-R-value" class="headerlink" title="4. L-R-value"></a>4. L-R-value</h2><p>L-value means left value, which locates an area of data on the memory specifies an object, whether it can be modified by an assignment operator. New standard prefers to call it object locator value. R-value is any expression that yields a value. Or we can say that it’s the value of an expression.</p>
+<h2 id="5-Big-Int-to-Bool"><a href="#5-Big-Int-to-Bool" class="headerlink" title="5. Big Int to _Bool"></a>5. Big Int to _Bool</h2><p>In <code>boolean.c</code>, I tried to assign a big value of my machine(<code>unsigned long long, 18446744073709551616</code>) to a variable of the type <code>_Bool</code>. When testing the value of this <code>_Bool</code>, interesting things happened, it became a zero(false), in contrast with my previous notion that this type has no expansion problem like representing bool in a loop using the type <code>int</code>. Code listed below(note that 2^64 = 18446744073709551616):</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> num;</span><br><span class="line">    <span class="keyword">long</span> sum = <span class="number">0l</span>;</span><br><span class="line">    <span class="built_in">_Bool</span> input_is_good;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Please enter an integer to be summed"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"(q to quit):"</span>);</span><br><span class="line">    input_is_good = (<span class="built_in">scanf</span>(<span class="string">"%ld"</span>, &amp;num) == <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">while</span> (input_is_good)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += num;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Please enter next integer(q to quit):"</span>);</span><br><span class="line">        input_is_good = (<span class="built_in">scanf</span>(<span class="string">"%ld"</span>, &amp;num) == <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Those integers sum to: %ld.\n"</span>, sum);</span><br><span class="line">    <span class="built_in">_Bool</span> test0 = <span class="number">18446744073709551615</span>, test1 = <span class="number">18446744073709551616</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"test0 = %d test1 = %d"</span>, test0, test1);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*my input:</span></span><br><span class="line"><span class="comment">q[ENTER]</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/*my output:</span></span><br><span class="line"><span class="comment">Please enter an integer to be summed(q to quit):q</span></span><br><span class="line"><span class="comment">Those integers sum to: 0.</span></span><br><span class="line"><span class="comment">test0 = 1 test1 = 0</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The clang compiler refuses to compile the program for me, gcc gives me a waring.</span></span><br></pre></td></tr></table></figure>
+
+<p>Next, I tried to assign the big value by another method, giving it the value of an variable. Of course the variable eventually exceeded its maximum, but this principle was discovered: except for the strange case of just giving a <code>_Bool</code> an outranged number, this type follows the rule that when assigned a zero, it’s a zero, when assigned a non-zero, it’s a one(true). Testing code listed below(simply a refinement of the previous one):</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">long</span> num;</span><br><span class="line">    <span class="keyword">long</span> sum = <span class="number">0l</span>;</span><br><span class="line">    <span class="built_in">_Bool</span> input_is_good;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Please enter an integer to be summed"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"(q to quit):"</span>);</span><br><span class="line">    input_is_good = (<span class="built_in">scanf</span>(<span class="string">"%ld"</span>, &amp;num) == <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">while</span> (input_is_good)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += num;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Please enter next integer(q to quit):"</span>);</span><br><span class="line">        input_is_good = (<span class="built_in">scanf</span>(<span class="string">"%ld"</span>, &amp;num) == <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Those integers sum to: %ld.\n"</span>, sum);</span><br><span class="line">    <span class="built_in">_Bool</span> test0 = <span class="number">18446744073709551615</span>, test1;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"test0 = %d test1 = %d\n"</span>, test0, test1);</span><br><span class="line">    test1 = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> i = <span class="number">9223372036854775808</span>;</span><br><span class="line">    test1 = i * <span class="number">10</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"test1 = %d\n"</span>, test1);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"i * 10 = %llu"</span>, i * <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* unfortunately clang refuses to compile a file including integer 18446744073709551616 or bigger.*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*my output using gcc 8.1.0 is below:</span></span><br><span class="line"><span class="comment">                                              ^</span></span><br><span class="line"><span class="comment">c.c:19:19: warning: integer literal is too large to be represented in a signed integer type, interpreting as unsigned [-Wimplicitly-unsigned-literal]</span></span><br><span class="line"><span class="comment">    _Bool test0 = 18446744073709551615, test1;</span></span><br><span class="line"><span class="comment">                  ^</span></span><br><span class="line"><span class="comment">c.c:22:28: warning: integer literal is too large to be represented in a signed integer type, interpreting as unsigned [-Wimplicitly-unsigned-literal]</span></span><br><span class="line"><span class="comment">    unsigned long long i = 9223372036854775808;</span></span><br><span class="line"><span class="comment">                           ^</span></span><br><span class="line"><span class="comment">4 warnings generated.</span></span><br><span class="line"><span class="comment">Please enter an integer to be summed(q to quit):q</span></span><br><span class="line"><span class="comment">Those integers sum to: 0.</span></span><br><span class="line"><span class="comment">test0 = 1 test1 = 0</span></span><br><span class="line"><span class="comment">test1 = 0</span></span><br><span class="line"><span class="comment">i * 10 = 0</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-Ctrl-Z-of-Line"><a href="#6-Ctrl-Z-of-Line" class="headerlink" title="6. Ctrl+Z of Line"></a>6. Ctrl+Z of Line</h2><p>About the EOF identifier. As I’ve known before testing, EOF stands for the end of file or error of file, which can indicate that a file is at its end. There’s nothing to say about the case of an actual file. But I’ve noticed that, in my windows, ctrl+z combination can stand for the EOF. However, when running the code below, I got a strange reaction:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="keyword">while</span> ((ch = getchar()) != EOF)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">putchar</span>(ch);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>When I’ve input Hello, world.^Z, the program did not end after printing Hello, world., Instead it paused at the end of that line waiting for my next input, which means that, in this case(although I temporarily wasn’t sure what kind of case was that case), ctrl+z didn’t mean EOF. After browsing through the internet and get the following output: When ^Z is inside a line input, the characters after the ^Z symbol wasn’t processed(including the ENTER). And when there are characters in front of the ^Z identifier inside a line input, the ^Z was interpreted as 26 in decimal(\032). When ^Z is the first one of a line input, it is EOF(-1 in my system).</p>
+<p>To sum up, windows thinks that, when the buffer is not empty(exclude ^Z), the input is not over yet. Only when the buffer is empty can that symbol be interpreted as an EOF.</p>
+<p>Now, one question came to mind: how do we end an input at the end of a line instead of the beginning of a new one when we have to put a ENTER in front of the ^Z? The answer might be: using the ^Z to identify the end of the line input, which saves the program form reading in the following ENTER, while the ENTER key can still work as a buffer flusher. Next input ^Z at the beginning of the new line.</p>
+<p>Let’s take a look at the command prompt feedback:</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E:\<span class="title">Documents</span>\<span class="title">Material</span>\<span class="title">DENDEN</span>\<span class="title">programming</span>\<span class="title">projs</span>\<span class="title">cc</span>++&gt;<span class="title">c</span> &gt;<span class="title">hello.txt</span></span></span><br><span class="line"><span class="function"><span class="title">Hello</span>,^<span class="title">Z</span></span></span><br><span class="line"><span class="function">^<span class="title">Z</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">E</span>:\<span class="title">Documents</span>\<span class="title">Material</span>\<span class="title">DENDEN</span>\<span class="title">programming</span>\<span class="title">projs</span>\<span class="title">cc</span>++&gt;<span class="title">type</span> <span class="title">hello.txt</span></span></span><br><span class="line"><span class="function"><span class="title">Hello</span>,</span></span><br><span class="line"><span class="function"><span class="title">E</span>:\<span class="title">Documents</span>\<span class="title">Material</span>\<span class="title">DENDEN</span>\<span class="title">programming</span>\<span class="title">projs</span>\<span class="title">cc</span>++&gt;<span class="title">No</span> <span class="title">line</span> <span class="title">shifting</span> <span class="title">after</span> <span class="title">the</span> <span class="title">Hello</span>, <span class="title">means</span> <span class="title">that</span> <span class="title">the</span> <span class="title">ENTER</span> <span class="title">after</span> <span class="title">the</span> ^<span class="title">Z</span> <span class="title">was</span> <span class="title">not</span> <span class="title">read</span> <span class="title">in</span>, <span class="title">successfully</span> <span class="title">end</span> <span class="title">the</span> <span class="title">txt</span> <span class="title">file</span> <span class="title">at</span> <span class="title">the</span> <span class="title">end</span> <span class="title">of</span> <span class="title">the</span> <span class="title">line</span>. <span class="title">Yeah</span>~</span></span><br></pre></td></tr></table></figure>
+
+<p>After opening the hello.txt file, I successfully got my cursor shining after the , character!</p>
+<p>Not for long, I noticed that there a strange character after the ,. So…I failed……after all.</p>
+<h2 id="7-Prototyping-for-Checking"><a href="#7-Prototyping-for-Checking" class="headerlink" title="7. Prototyping for Checking"></a>7. Prototyping for Checking</h2><p>About argument passing validation in a function calling, when using the prototype without type specification, like <code>int good()</code>, different compiler gives different answers:</p>
+<p>the following code, when compiling using <code>gcc 8.1.0</code>, nothing bad happened, no linkage error, however when compiling using the <code>LLVM-clang 7.0.0</code>, linkage error occurred.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*c.c*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">good</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">char</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(short));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">float</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">double</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%zd\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>));</span><br><span class="line">    good(<span class="number">10</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*good.c*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">good</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Good!\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*compiling using clang*/</span></span><br><span class="line"><span class="comment">//emmm I was wrong. Clang worked fine.</span></span><br><span class="line"><span class="comment">//So did gcc.</span></span><br><span class="line"><span class="comment">//Theeeathe following principle was fine.</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>quoting C Primer Plus Page352</p>
+<p>Suppose you give a prototype like this:<br>void print_name();<br>An ANSI C compiler will assume that you have decided to forego function prototyping, and it<br>will not check arguments. To indicate that a function really has no arguments, use the void<br>keyword within the parentheses:<br>void print_name(void);<br>ANSI C interprets the preceding expression to mean that print_name() takes no arguments. It<br>then checks to see that you, in fact, do not use arguments when calling this function.</p>
+</blockquote>
+<h2 id="8-Selected-Code"><a href="#8-Selected-Code" class="headerlink" title="8. Selected Code"></a>8. Selected Code</h2><p>It’s marvelous that Visual Studio Code can simply run selected code! I might be knowing why sometimes clang gives me strange error report.</p>
+<h2 id="9-Two"><a href="#9-Two" class="headerlink" title="9. Two ||"></a>9. Two ||</h2><p>In <code>./llogic.c</code>, I tried to combine two logical operators:<code>||</code>or<code>&amp;&amp;</code>. Note that I was trying to combine two same operators, not different ones. When applying the left-to-right precedence, I found that with or without a pair of parentheses, the following code behaves the exactly same way(testing different lines separately using comment): </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">-1</span>, b = <span class="number">-1</span>, c = <span class="number">-1</span>, d = <span class="number">-100</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ((a = <span class="number">0</span>) &amp;&amp; (b = <span class="number">1</span>) &amp;&amp; (c = <span class="number">1</span>))<span class="comment">//#line1</span></span><br><span class="line">        d = <span class="number">100</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// if (((a = 0) &amp;&amp; (b = 1)) &amp;&amp; (c = 1))//#line2</span></span><br><span class="line">    <span class="comment">// d = 100;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// if ((a = 0) &amp;&amp; ((b = 1) &amp;&amp; (c = 1)))//#line3</span></span><br><span class="line">    <span class="comment">//     d = 100;</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"a = %d, b = %d, c = %d\nd = %d"</span>, a, b, c, d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*output of #line123</span></span><br><span class="line"><span class="comment">a = 0, b = -1, c = -1</span></span><br><span class="line"><span class="comment">d = -100</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>So I have some doubt that whether the left-to-right precedence has any effect on the actual machine code compiled from the version with parentheses or without.</p>
+<h2 id="10-Why-Not-Brace-It"><a href="#10-Why-Not-Brace-It" class="headerlink" title="10. Why Not Brace It?"></a>10. Why Not Brace It?</h2><p>I was told that an array can’t be assigned value using braced-list. So why not? Not convenient enough?</p>
+<h2 id="11-Something-Really-Awkward-About-Visual-Studio-Code"><a href="#11-Something-Really-Awkward-About-Visual-Studio-Code" class="headerlink" title="11. Something Really Awkward About Visual Studio Code"></a>11. Something Really Awkward About Visual Studio Code</h2><p>Today, 2019-02-22, my Visual Studio Code refuses to debug any C++ or C code for me. After tons of “baiduing” and “bing”, the problem was awkwardly related to a recent change I’ve made to my system: I checked the box: Using Unicode UTF-8 for… in the region setting for my computer.</p>
+<p><strong>System:</strong> Windows10 Professional 1809</p>
+<p><strong>Why Changed It:</strong> To play BattleField4, the little TM can’t be comprehended by DirectX 12.</p>
+<p>Now I’ve been better acknowledged of the danger of using a beta version function of a software.</p>
+<p>Eventually found my solution <strong>here</strong>: <a href="https://stackoverflow.com/questions/50792457/cant-debug-c-in-vs-code-with-gdb" target="_blank" rel="noopener">https://stackoverflow.com/questions/50792457/cant-debug-c-in-vs-code-with-gdb</a></p>
+<p>And <strong>here</strong>: <a href="https://github.com/Microsoft/vscode-cpptools/issues/1527" target="_blank" rel="noopener">https://github.com/Microsoft/vscode-cpptools/issues/1527</a></p>
+<p>Exactly the same case! So, to learn about computer, you learn about searching information.</p>
+<p>Plus: Github.com is good.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/07/hello2/" rel="prev" title="hello2">
+      <i class="fa fa-chevron-left"></i> hello2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/01/08/make/" rel="next" title="make">
+      make <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Note-for-C-Primer-Plus"><span class="nav-number">1.</span> <span class="nav-text">Note for C Primer Plus</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-PRIu16"><span class="nav-number">1.1.</span> <span class="nav-text">1. PRIu16</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Long-Double-of-GCC"><span class="nav-number">1.2.</span> <span class="nav-text">2. Long Double of GCC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Variable-Arguments"><span class="nav-number">1.3.</span> <span class="nav-text">3. Variable Arguments</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-L-R-value"><span class="nav-number">1.4.</span> <span class="nav-text">4. L-R-value</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Big-Int-to-Bool"><span class="nav-number">1.5.</span> <span class="nav-text">5. Big Int to _Bool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Ctrl-Z-of-Line"><span class="nav-number">1.6.</span> <span class="nav-text">6. Ctrl+Z of Line</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Prototyping-for-Checking"><span class="nav-number">1.7.</span> <span class="nav-text">7. Prototyping for Checking</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Selected-Code"><span class="nav-number">1.8.</span> <span class="nav-text">8. Selected Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Two"><span class="nav-number">1.9.</span> <span class="nav-text">9. Two ||</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-Why-Not-Brace-It"><span class="nav-number">1.10.</span> <span class="nav-text">10. Why Not Brace It?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Something-Really-Awkward-About-Visual-Studio-Code"><span class="nav-number">1.11.</span> <span class="nav-text">11. Something Really Awkward About Visual Studio Code</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">dendenxu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dendenxu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme: 'default',
+      logLevel: 3,
+      flowchart: { curve: 'linear' },
+      gantt: { axisFormat: '%m/%d/%Y' },
+      sequence: { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
