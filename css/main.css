@@ -2,7 +2,7 @@
   font-family: 'Alatsi';
   font-style: normal;
   font-weight: normal;
-  src: url("../fonts/../fonts/alatsi.eot");
+  src: url("../fonts/alatsi.eot");
   src: url("../fonts/alatsi.eot?#iefix") format('embedded-opentype'), url("../fonts/alatsi.woff2") format('woff2'), url("../fonts/alatsi.woff") format('woff'), url("../fonts/alatsi.ttf") format('truetype'), url("../fonts/alatsi.svg#alatsiregular") format('svg');
 }
 @font-face {
@@ -1212,7 +1212,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #c7acff;
+  background: #f9f76c;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
