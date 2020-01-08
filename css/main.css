@@ -1,16 +1,23 @@
 @font-face {
-  font-family: 'Cascadia Code';
-  font-weight: normal;
-  src: url("../fonts/Cascadia.ttf") format('truetype'), local('Cascadia Code');
-}
-@font-face {
   font-family: 'Alatsi';
-  src: url("../fonts/Alatsi-Regular.ttf") format('truetype'), local('Alatsi');
+  font-style: normal;
+  font-weight: normal;
+  src: url("alatsi.eot");
+  src: url("alatsi.eot?#iefix") format('embedded-opentype'), url("alatsi.woff2") format('woff2'), url("alatsi.woff") format('woff'), url("alatsi.ttf") format('truetype'), url("alatsi.svg#alatsiregular") format('svg');
 }
 @font-face {
   font-family: 'Cabin';
+  font-style: normal;
   font-weight: normal;
-  src: url("../fonts/Cabin-Regular.ttf") format('truetype'), local('Cabin');
+  src: url("cabin.eot");
+  src: url("cabin.eot?#iefix") format('embedded-opentype'), url("cabin.woff2") format('woff2'), url("cabin.woff") format('woff'), url("cabin.ttf") format('truetype'), url("cabin.svg#cabinregular") format('svg');
+}
+@font-face {
+  font-family: 'Cascadia Code';
+  font-style: normal;
+  font-weight: normal;
+  src: url("cascadia.eot");
+  src: url("cascadia.eot?#iefix") format('embedded-opentype'), url("cascadia.woff2") format('woff2'), url("cascadia.woff") format('woff'), url("cascadia.ttf") format('truetype'), url("cascadia.svg#cascadia_coderegular") format('svg');
 }
 html {
   line-height: 1.15; /* 1 */
@@ -1205,7 +1212,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #46c6da;
+  background: #abffec;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
