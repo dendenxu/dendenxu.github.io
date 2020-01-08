@@ -2,22 +2,22 @@
   font-family: 'Alatsi';
   font-style: normal;
   font-weight: normal;
-  src: url("alatsi.eot");
-  src: url("alatsi.eot?#iefix") format('embedded-opentype'), url("alatsi.woff2") format('woff2'), url("alatsi.woff") format('woff'), url("alatsi.ttf") format('truetype'), url("alatsi.svg#alatsiregular") format('svg');
+  src: url("../fonts/../fonts/alatsi.eot");
+  src: url("../fonts/alatsi.eot?#iefix") format('embedded-opentype'), url("../fonts/alatsi.woff2") format('woff2'), url("../fonts/alatsi.woff") format('woff'), url("../fonts/alatsi.ttf") format('truetype'), url("../fonts/alatsi.svg#alatsiregular") format('svg');
 }
 @font-face {
   font-family: 'Cabin';
   font-style: normal;
   font-weight: normal;
-  src: url("cabin.eot");
-  src: url("cabin.eot?#iefix") format('embedded-opentype'), url("cabin.woff2") format('woff2'), url("cabin.woff") format('woff'), url("cabin.ttf") format('truetype'), url("cabin.svg#cabinregular") format('svg');
+  src: url("../fonts/cabin.eot");
+  src: url("../fonts/cabin.eot?#iefix") format('embedded-opentype'), url("../fonts/cabin.woff2") format('woff2'), url("../fonts/cabin.woff") format('woff'), url("../fonts/cabin.ttf") format('truetype'), url("../fonts/cabin.svg#cabinregular") format('svg');
 }
 @font-face {
   font-family: 'Cascadia Code';
   font-style: normal;
   font-weight: normal;
-  src: url("cascadia.eot");
-  src: url("cascadia.eot?#iefix") format('embedded-opentype'), url("cascadia.woff2") format('woff2'), url("cascadia.woff") format('woff'), url("cascadia.ttf") format('truetype'), url("cascadia.svg#cascadia_coderegular") format('svg');
+  src: url("../fonts/cascadia.eot");
+  src: url("../fonts/cascadia.eot?#iefix") format('embedded-opentype'), url("../fonts/cascadia.woff2") format('woff2'), url("../fonts/cascadia.woff") format('woff'), url("../fonts/cascadia.ttf") format('truetype'), url("../fonts/cascadia.svg#cascadia_coderegular") format('svg');
 }
 html {
   line-height: 1.15; /* 1 */
@@ -1212,7 +1212,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #8cd94d;
+  background: #c7acff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
