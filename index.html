@@ -249,13 +249,13 @@
 <li>食物模块应该会检测到这一过程的发生并产生新的食物</li>
 <li>Test Fixture中对撞墙后的状态进行了重新初始化，因此上述过程会重复，但是新产生的食物的位置应该是随机的</li>
 </ul>
-<p><img src="/.io//image-20200112195744118.png" alt="image-20200112195744118"></p>
+<p><img src="/2020/01/13/core/image-20200112195744118.png" alt="image-20200112195744118"></p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> core_sim;</span><br><span class="line">    <span class="keyword">reg</span> clk;</span><br><span class="line">    <span class="keyword">reg</span> [<span class="number">12</span>:<span class="number">0</span>] keystroke;</span><br><span class="line">    core <span class="variable">#(.max_len(15)</span>,</span><br><span class="line">    <span class="variable">.max_len_bit_len</span>(<span class="number">4</span>),</span><br><span class="line">    <span class="variable">.clk_div_num</span>(<span class="number">1250</span>),</span><br><span class="line">    <span class="variable">.init_score1</span>(<span class="number">2</span>),</span><br><span class="line">    <span class="variable">.init_score2</span>(<span class="number">2</span>),</span><br><span class="line">    <span class="variable">.init_food1</span>(<span class="number">10'b0000001000</span>),</span><br><span class="line">    <span class="variable">.init_food2</span>(<span class="number">10'b0000110001</span>),</span><br><span class="line">    <span class="variable">.init_snake1</span>(&#123;&#123;(<span class="number">16</span>-<span class="number">2</span>)*<span class="number">10</span>&#123;<span class="number">1'b1</span>&#125;&#125;,<span class="number">20'b0000000000_0000000001</span>&#125;),</span><br><span class="line">    <span class="variable">.init_snake2</span>(&#123;&#123;(<span class="number">16</span>-<span class="number">2</span>)*<span class="number">10</span>&#123;<span class="number">1'b1</span>&#125;&#125;,<span class="number">20'b0001000000_0000100001</span>&#125;)</span><br><span class="line">    ) uut (</span><br><span class="line">        <span class="variable">.clk_raw</span>(clk),</span><br><span class="line">        <span class="variable">.keystroke</span>(keystroke)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">        keystroke = <span class="number">13'b10000_0010_0010</span>;</span><br><span class="line">        #<span class="number">10000000</span>; keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">        #<span class="number">10000000</span>; keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">        #<span class="number">10000000</span>; keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">        clk = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">forever</span> #<span class="number">5</span> clk =~clk;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/.io//image-20200112193229295.png" alt="image-20200112193229295"></p>
-<p><img src="/.io//image-20200112193311686.png" alt="image-20200112193311686"></p>
-<p><img src="/.io//image-20200112193354678.png" alt="image-20200112193354678"></p>
-<p><img src="/.io//image-20200112194745071.png" alt="image-20200112194745071"></p>
+<p><img src="/2020/01/13/core/image-20200112193229295.png" alt="image-20200112193229295"></p>
+<p><img src="/2020/01/13/core/image-20200112193311686.png" alt="image-20200112193311686"></p>
+<p><img src="/2020/01/13/core/image-20200112193354678.png" alt="image-20200112193354678"></p>
+<p><img src="/2020/01/13/core/image-20200112194745071.png" alt="image-20200112194745071"></p>
 <p>可以发现：</p>
 <ul>
 <li>小蛇在吃到食物之后食物的位置会更新</li>
@@ -270,11 +270,11 @@
 <li><p>初始的方向为向上，因此蛇应该在移动一格后停住</p>
 </li>
 </ul>
-<p><img src="/.io//image-20200112201102949.png" alt="image-20200112201102949"></p>
+<p><img src="/2020/01/13/core/image-20200112201102949.png" alt="image-20200112201102949"></p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> core_sim;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Inputs</span></span><br><span class="line">    <span class="keyword">reg</span> clk;</span><br><span class="line">    <span class="keyword">reg</span> [<span class="number">12</span>:<span class="number">0</span>] keystroke;</span><br><span class="line">    core <span class="variable">#(.max_len(15)</span>,</span><br><span class="line">    <span class="variable">.max_len_bit_len</span>(<span class="number">4</span>),</span><br><span class="line">    <span class="variable">.clk_div_num</span>(<span class="number">1250</span>),</span><br><span class="line"><span class="comment">// These two lines are used to verify whether the snake will stop if it collides with its body</span></span><br><span class="line">    <span class="variable">.init_score1</span>(<span class="number">5</span>),</span><br><span class="line">    <span class="variable">.init_snake1</span>(&#123;&#123;(<span class="number">16</span>-<span class="number">5</span>)*<span class="number">10</span>&#123;<span class="number">1'b1</span>&#125;&#125;,<span class="number">50'b0100001100_0100001101_0100001110_0100101110_0100101101</span>&#125;)</span><br><span class="line">    ) uut (</span><br><span class="line">        <span class="variable">.clk_raw</span>(clk),</span><br><span class="line">        <span class="variable">.keystroke</span>(keystroke)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">    <span class="comment">// These two lines are used to verify whether the snake will stop if it collides with its body</span></span><br><span class="line">        keystroke = <span class="number">13'b10000_1000_0100</span>;</span><br><span class="line">        #<span class="number">10000000</span>;</span><br><span class="line">        keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">        clk = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">forever</span> #<span class="number">5</span> clk =~clk;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/.io//image-20200112205332703.png" alt="image-20200112205332703"></p>
-<p><img src="/.io//image-20200112205502997.png" alt="image-20200112205502997"></p>
+<p><img src="/2020/01/13/core/image-20200112205332703.png" alt="image-20200112205332703"></p>
+<p><img src="/2020/01/13/core/image-20200112205502997.png" alt="image-20200112205502997"></p>
 <p>可以发现：</p>
 <ul>
 <li>小蛇在时钟周期来临的时候及时停住了</li>
@@ -289,11 +289,11 @@
 <p>因此蓝色小蛇会撞上绿色小蛇，并停止运动</p>
 </li>
 </ul>
-<p><img src="/.io//image-20200112204454838.png" alt="image-20200112204454838"></p>
+<p><img src="/2020/01/13/core/image-20200112204454838.png" alt="image-20200112204454838"></p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* verilator lint_off STMTDLY*/</span></span><br><span class="line"><span class="keyword">module</span> core_sim;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Inputs</span></span><br><span class="line">    <span class="keyword">reg</span> clk;</span><br><span class="line">    <span class="keyword">reg</span> [<span class="number">12</span>:<span class="number">0</span>] keystroke;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Instantiate the Unit Under Test (UUT)</span></span><br><span class="line">    core <span class="variable">#(.max_len(15)</span>,</span><br><span class="line">    <span class="variable">.max_len_bit_len</span>(<span class="number">4</span>),</span><br><span class="line">    <span class="variable">.clk_div_num</span>(<span class="number">1250</span>),</span><br><span class="line"><span class="comment">// These two lines are used to verify whether the snake will stop if it collides with its body</span></span><br><span class="line">    <span class="variable">.init_score1</span>(<span class="number">5</span>),</span><br><span class="line">    <span class="variable">.init_snake1</span>(&#123;&#123;(<span class="number">16</span>-<span class="number">5</span>)*<span class="number">10</span>&#123;<span class="number">1'b1</span>&#125;&#125;,<span class="number">50'b0100001100_0100001101_0100001110_0100101110_0100101101</span>&#125;)</span><br><span class="line"></span><br><span class="line">    ) uut (</span><br><span class="line">        <span class="variable">.clk_raw</span>(clk),</span><br><span class="line">        <span class="variable">.keystroke</span>(keystroke)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">    <span class="comment">// These two lines are used to verify whether the snake will stop if it collides with its body</span></span><br><span class="line">        keystroke = <span class="number">13'b10000_1000_0100</span>;</span><br><span class="line">        #<span class="number">10000000</span>;</span><br><span class="line">        keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">        clk = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">forever</span> #<span class="number">5</span> clk =~clk;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/.io//image-20200112205034578.png" alt="image-20200112205034578"></p>
-<p><img src="/.io//image-20200112205116900.png" alt="image-20200112205116900"></p>
+<p><img src="/2020/01/13/core/image-20200112205034578.png" alt="image-20200112205034578"></p>
+<p><img src="/2020/01/13/core/image-20200112205116900.png" alt="image-20200112205116900"></p>
 <p>可以发现：</p>
 <ul>
 <li>蓝色小蛇按照预期停住了，而绿色小蛇继续运行</li>
@@ -301,10 +301,10 @@
 <h3 id="总体模拟"><a href="#总体模拟" class="headerlink" title="总体模拟"></a>总体模拟</h3><p>这里我们尝试了改变方向，更新系统等操作，发现均能正常运行</p>
 <figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* verilator lint_off STMTDLY*/</span></span><br><span class="line"><span class="keyword">module</span> core_sim;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Inputs</span></span><br><span class="line">    <span class="keyword">reg</span> clk;</span><br><span class="line">    <span class="keyword">reg</span> [<span class="number">12</span>:<span class="number">0</span>] keystroke;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Instantiate the Unit Under Test (UUT)</span></span><br><span class="line">    core <span class="variable">#(.max_len(15)</span>,</span><br><span class="line">    <span class="variable">.max_len_bit_len</span>(<span class="number">4</span>),</span><br><span class="line">    <span class="variable">.clk_div_num</span>(<span class="number">1250</span>)</span><br><span class="line">    ) uut (</span><br><span class="line">        <span class="variable">.clk_raw</span>(clk),</span><br><span class="line">        <span class="variable">.keystroke</span>(keystroke)</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// These line are general test cases</span></span><br><span class="line">        keystroke = <span class="number">13'b10000_1000_0010</span>;</span><br><span class="line">        #<span class="number">1000000</span> keystroke = <span class="number">13'b10000_0010_0100</span>;</span><br><span class="line">        #<span class="number">1000000</span> keystroke[<span class="number">9</span>] = <span class="number">1</span>;</span><br><span class="line">        #<span class="number">1000000</span> keystroke = <span class="number">13'b10000_1000_1000</span>;</span><br><span class="line">        #<span class="number">1000000</span>;</span><br><span class="line">        keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">        #<span class="number">1000000</span>;</span><br><span class="line">        keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">        #<span class="number">4000000</span> keystroke = <span class="number">13'b10000_1000_0010</span>;</span><br><span class="line">        keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">        #<span class="number">1000000</span> keystroke = <span class="number">13'b10000_0010_0010</span>;</span><br><span class="line">        #<span class="number">10000000</span>;</span><br><span class="line">        keystroke[<span class="number">8</span>] = <span class="number">1</span>;#<span class="number">50</span> keystroke[<span class="number">8</span>] = <span class="number">0</span>;</span><br><span class="line">        keystroke = <span class="number">13'b10000_1000_0010</span>;</span><br><span class="line">        #<span class="number">1000000</span> keystroke = <span class="number">13'b10000_0010_0100</span>;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">initial</span> <span class="keyword">begin</span></span><br><span class="line">        clk = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">forever</span> #<span class="number">5</span> clk =~clk;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/.io//image-20200113014040660.png" alt="image-20200113014040660"></p>
-<p><img src="/.io//image-20200113014157850.png" alt="image-20200113014157850"></p>
+<p><img src="/2020/01/13/core/image-20200113014040660.png" alt="image-20200113014040660"></p>
+<p><img src="/2020/01/13/core/image-20200113014157850.png" alt="image-20200113014157850"></p>
 <p>箭头指向的部分为重置游戏与暂停游戏的部分</p>
-<p><img src="/.io//image-20200113014341564.png" alt="image-20200113014341564"></p>
+<p><img src="/2020/01/13/core/image-20200113014341564.png" alt="image-20200113014341564"></p>
 <h2 id="关于Verilog与硬件设计"><a href="#关于Verilog与硬件设计" class="headerlink" title="关于Verilog与硬件设计"></a>关于Verilog与硬件设计</h2><p>在使用Verilog这种硬件描述语言的过程中，我们可以注意到许多与普通的程序设计语言不同的地方，例如</p>
 <ul>
 <li><p>Verilog最终是要转化为某种实际可以存在的硬件结构的，如果从语法层面这一设计就无法存在，应直接修改设计思路</p>
@@ -339,24 +339,24 @@
 <p>The right tool generates the right result and user experience as long as you’re able to fulfill its full potential. So it is with our logic design simulator: <code>ISim</code>. Not until the end of this experiment was I aware of the strength of this simulator.</p>
 <ol>
 <li><p>Variables inside the simulation module can be accessed from the left panel</p>
-<p><img src="/.io//image-20191231162215031.png" alt="image-20191231162215031"></p>
-<p><img src="/.io//image-20191231162315990.png" alt="image-20191231162315990"></p>
+<p><img src="/2020/01/13/core/image-20191231162215031.png" alt="image-20191231162215031"></p>
+<p><img src="/2020/01/13/core/image-20191231162315990.png" alt="image-20191231162315990"></p>
 </li>
 <li><p>The command line(and GUI) supports rich operation, there’s even a list of possible usage listed by Xilinx</p>
-<p><img src="/.io//image-20191231162441220.png" alt="image-20191231162441220"></p>
-<p><img src="/.io//image-20191231162544139.png" alt="image-20191231162544139"></p>
-<p><img src="/.io//image-20191231162558359.png" alt="image-20191231162558359"></p>
+<p><img src="/2020/01/13/core/image-20191231162441220.png" alt="image-20191231162441220"></p>
+<p><img src="/2020/01/13/core/image-20191231162544139.png" alt="image-20191231162544139"></p>
+<p><img src="/2020/01/13/core/image-20191231162558359.png" alt="image-20191231162558359"></p>
 </li>
 <li><p>Some examples:</p>
 <ul>
 <li><p>Restart and re-run</p>
-<p> <img src="/.io//image-20191231162959190.png" alt="image-20191231162959190"></p>
+<p> <img src="/2020/01/13/core/image-20191231162959190.png" alt="image-20191231162959190"></p>
 </li>
 <li><p>show full value:</p>
-<p> <img src="/.io//image-20191231163125964.png" alt="image-20191231163125964"></p>
+<p> <img src="/2020/01/13/core/image-20191231163125964.png" alt="image-20191231163125964"></p>
 </li>
 <li><p>Load already saved wave configuration or waveform storage:</p>
-<p> <img src="/.io//image-20191231163238733-1578848642073.png" alt="image-20191231163238733"></p>
+<p> <img src="/2020/01/13/core/image-20191231163238733-1578848642073.png" alt="image-20191231163238733"></p>
 </li>
 </ul>
 </li>
@@ -371,17 +371,17 @@
 <li><p>在同一系统下，即使是Windows，也有办法运行多个ISE来对同一个项目进行综合布线</p>
 <p>这样做能够最大限度地利用我们的资源，例如我的个人PC有12核，而ISE最耗时的<code>map</code>最高只占用2个，这种方式可以让我们的等待时间大为缩短。</p>
 <p>当我们不确定多个小的改动哪一个能达到预期的目标时，我们完全可以将工程文件夹复制一份，并用多个ISE进程同时进行综合布线</p>
-<p><img src="/.io//image-20200113012716412.png" alt="image-20200113012716412"></p>
+<p><img src="/2020/01/13/core/image-20200113012716412.png" alt="image-20200113012716412"></p>
 </li>
 <li><p>在用ISE自带工具ISim进行模拟的时候，可以将不必要的时钟略去，例如本来我们需要累加五百万次系统时钟以得到一个周期为1s的信号，在模拟过程中完全可以将这个数字缩小到五千甚至五百，既能加快模拟时候的计算速度，又能减小模拟结果的波形数据库所占空间</p>
 <ul>
 <li><p>进行优化前</p>
-<p><img src="/.io//image-20200113013005174.png" alt="image-20200113013005174"></p>
+<p><img src="/2020/01/13/core/image-20200113013005174.png" alt="image-20200113013005174"></p>
 </li>
 <li><p>进行优化后</p>
-<p><img src="/.io//image-20200113012818649.png" alt="image-20200113012818649"></p>
+<p><img src="/2020/01/13/core/image-20200113012818649.png" alt="image-20200113012818649"></p>
 <p>这两者的区别就在于<code>clk_div</code>分时模块所采用的累加策略：</p>
-<p><img src="/.io//image-20200113013224795.png" alt="image-20200113013224795"></p>
+<p><img src="/2020/01/13/core/image-20200113013224795.png" alt="image-20200113013224795"></p>
 <p>这一常数<code>clk_div_num</code>是1250_0000时会得到类似图1的结果，而1250时就会得到类似图2的结果.。</p>
 </li>
 </ul>
@@ -392,22 +392,22 @@
 <p>Surprisingly, there do exist multiple approaches to fulfill that wish. Quantities of extensions are accessible in Visual Studio Code, with the help of which, we can easily get the following functions</p>
 <ul>
 <li><p>Auto Completion</p>
-<p> <img src="/.io//auto_completion.png" alt="auto_completion"></p>
+<p> <img src="/2020/01/13/core/auto_completion.png" alt="auto_completion"></p>
 </li>
 <li><p>Code Snippet</p>
-<p> <img src="/.io//code_snippet.png" alt="code_snippet"></p>
+<p> <img src="/2020/01/13/core/code_snippet.png" alt="code_snippet"></p>
 </li>
 <li><p>Reference Searching</p>
-<p> <img src="/.io//reference_searching.png" alt="reference_searching"></p>
+<p> <img src="/2020/01/13/core/reference_searching.png" alt="reference_searching"></p>
 </li>
 <li><p>Auto Format</p>
-<p> <img src="/.io//auto_format.png" alt="auto_format"></p>
+<p> <img src="/2020/01/13/core/auto_format.png" alt="auto_format"></p>
 </li>
 <li><p>Advanced Syntax Highlighting</p>
-<p> <img src="/.io//advanced_syntax_highlighting.png" alt="advanced_syntax_highlighting"></p>
+<p> <img src="/2020/01/13/core/advanced_syntax_highlighting.png" alt="advanced_syntax_highlighting"></p>
 </li>
 <li><p>Handy Syntax Checking</p>
-<p> <img src="/.io//syntax_checking.png" alt="syntax_checking"></p>
+<p> <img src="/2020/01/13/core/syntax_checking.png" alt="syntax_checking"></p>
 </li>
 </ul>
 
