@@ -165,6 +165,818 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://dendenxu.github.io/2020/01/14/Assembly/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="dendenxu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dendenxu">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/14/Assembly/" class="post-title-link" itemprop="url">Assembly</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-01-14 15:37:40 / Modified: 15:37:11" itemprop="dateCreated datePublished" datetime="2020-01-14T15:37:40+08:00">2020-01-14</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Assembly-Language-Program-Design"><a href="#Assembly-Language-Program-Design" class="headerlink" title="Assembly Language Program Design"></a>Assembly Language Program Design</h1><h2 id="OllyDBG-x96-dbg"><a href="#OllyDBG-x96-dbg" class="headerlink" title="OllyDBG/x96_dbg"></a><code>OllyDBG</code>/<code>x96_dbg</code></h2><h3 id="Typical-Entry-Point"><a href="#Typical-Entry-Point" class="headerlink" title="Typical Entry Point"></a>Typical Entry Point</h3><p>Normally the entry point in win application is listed below:</p>
+<p>Three push followed by a call.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">push eax; This one is normally the environment of the entry point</span><br><span class="line">push dword ptr ds:[4066F8]; This is typically the char *argv</span><br><span class="line">push dword ptr ds:[4066F4]; This is typically the char argc</span><br><span class="line">call password.401000</span><br></pre></td></tr></table></figure>
+
+<p>The corresponding C function would be:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">char</span> argc, <span class="keyword">char</span> *argv, <span class="keyword">char</span> *env)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// The C calling convention: push the last parameter to the calling stack first</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Basic-Operation-of-x96-dbg-x86-x64"><a href="#Basic-Operation-of-x96-dbg-x86-x64" class="headerlink" title="Basic Operation of x96_dbg(x86/x64)"></a>Basic Operation of <code>x96_dbg(x86/x64)</code></h3><ul>
+<li><p>Set Breakpoint: <code>F2</code></p>
+</li>
+<li><p>Continue: <code>F9</code></p>
+</li>
+<li><p>Step Into: <code>F7</code></p>
+</li>
+<li><p>Step Over: <code>F8</code></p>
+</li>
+<li><p>Go To: <code>Ctrl + G</code></p>
+</li>
+<li><p>Undo Selected: Select and <code>Ctrl + Backspace</code></p>
+</li>
+<li><p>Edit Selected: <code>Ctrl + E</code></p>
+</li>
+</ul>
+<h3 id="Simplest-Way-to-Crack-an-exe-File"><a href="#Simplest-Way-to-Crack-an-exe-File" class="headerlink" title="Simplest Way to Crack an .exe File"></a>Simplest Way to Crack an .exe File</h3><h4 id="Black-White’-s-Way"><a href="#Black-White’-s-Way" class="headerlink" title="Black White’ s Way"></a>Black White’ s Way</h4><ol>
+<li>Find the entry point according to the typical form.</li>
+<li>Set breakpoint here.</li>
+<li>Follow the program’s flow, step into the main function.</li>
+<li>Follow the main function’s flow, find thing you want to get:<ul>
+<li>Password</li>
+<li>Program logic</li>
+</ul>
+</li>
+<li>(Optionally) Modify the program’s logic</li>
+</ol>
+<h4 id="String-finding-Way"><a href="#String-finding-Way" class="headerlink" title="String-finding Way"></a>String-finding Way</h4><ol>
+<li>Run the program in your computer normally.</li>
+<li>Get to the point where you want to crack its password or change logic flow.</li>
+<li>Remember usable character string, for example:<ul>
+<li>Button description</li>
+<li>Dialog window text</li>
+</ul>
+</li>
+<li>Close the program and rerun it in x96_dbg.</li>
+<li>Use the string-finding function to locate where the string lies in the program.</li>
+<li>The logic you want to change or the password you want to get may be around:<ul>
+<li>The password is compared with user’s input: low</li>
+<li>The password’s md5 is compared with user’s input’s md5: hard</li>
+<li>Whatever. Something is compared, and some <code>jmp</code> operation is taken</li>
+</ul>
+</li>
+<li>Try to change the logic of the program.</li>
+</ol>
+<h3 id="About-md5"><a href="#About-md5" class="headerlink" title="About md5"></a>About md5</h3><p>md5 is a irreversible function to take message from a file</p>
+<p>It’s hardly possible to get the same md5 value from two different files.</p>
+<ul>
+<li>First it mod the file size with 512bit</li>
+<li>Then it makes sure the remainder is 512 - 64 = 448bit</li>
+<li>By adding a 1 for the first bit and then 0 for others</li>
+<li>Add the file size to the last 64bit(if bigger than 2^64^ bit, )</li>
+<li>Divide the</li>
+<li>Using some strange function to produce values</li>
+</ul>
+<p>Try this webpage, it may help about md5: <a href="http://www.51hei.com/bbs/dpj-42087-1.html" target="_blank" rel="noopener">md5</a></p>
+<h2 id="汇编语言的书写和格式"><a href="#汇编语言的书写和格式" class="headerlink" title="汇编语言的书写和格式"></a>汇编语言的书写和格式</h2><p>环境：masm32，编辑器：QEditor.exe</p>
+<h3 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.386</span><br><span class="line">.model flat, stdcall</span><br><span class="line">option casemap :none            ; 标准头格式</span><br><span class="line"></span><br><span class="line">include C:\masm32\include\windows.inc     ; 同C中#include</span><br><span class="line">include C:\masm32\include\kernel32.inc</span><br><span class="line">include C:\masm32\include\user32.inc</span><br><span class="line"></span><br><span class="line">includelib C:\masm32\lib\kernel32.lib     ;</span><br><span class="line">includelib C:\masm32\lib\user32.lib</span><br></pre></td></tr></table></figure>
+
+<h3 id="Functions"><a href="#Functions" class="headerlink" title="Functions"></a>Functions</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.code                       ; 标志代码开始</span><br><span class="line"><span class="comment">// C语言中</span></span><br><span class="line">wsprintf(result, format, eax);  </span><br><span class="line"><span class="comment">//汇编中</span></span><br><span class="line">invoke wsprintf, offset result, offset format, eax</span><br><span class="line"><span class="comment">// invoke：调用函数，宏Marco；offset：取…地址</span></span><br><span class="line">invoke MessageBox, <span class="number">0</span>, offset result, offset prompt, <span class="number">0</span></span><br><span class="line"><span class="comment">//弹窗</span></span><br><span class="line"><span class="comment">/* 0: 父窗口Handle, prompt: 弹框Title, result: 弹框Body,</span></span><br><span class="line"><span class="comment"> * 0: 弹框Style(最简单的弹框式样 只有一个按钮)</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Variable-definition"><a href="#Variable-definition" class="headerlink" title="Variable definition"></a>Variable definition</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.data                       ; 标志数据定义开始</span><br><span class="line">result db <span class="number">100</span> dup(<span class="number">0</span>)        ; dup:duplicate重复;</span><br><span class="line">; <span class="keyword">char</span> result[<span class="number">100</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">format db <span class="string">"%d"</span>, <span class="number">0</span>           ; db: define <span class="keyword">byte</span>字节类型</span><br><span class="line">; <span class="keyword">char</span> format[] = <span class="string">"%d"</span>;</span><br><span class="line">prompt db <span class="string">"The Result"</span>, <span class="number">0</span>   ; <span class="number">0</span>: <span class="string">'\0'</span></span><br><span class="line">; <span class="keyword">char</span> prompt[] = <span class="string">"The Result"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>The followings are the same:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s db <span class="string">"ABC"</span>, <span class="number">0</span></span><br><span class="line">s db 'ABC', 0</span><br><span class="line">s db <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="number">0</span></span><br><span class="line">s db <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>, <span class="number">0</span>   ; <span class="keyword">asm</span>中单双引号无区别</span><br><span class="line">s db <span class="number">41</span>h, <span class="number">42</span>h, <span class="number">43</span>h, <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.code</span><br><span class="line">main:               ;标号(Label)</span><br><span class="line">    mov eax, 0</span><br><span class="line">    mov ebx, 1</span><br><span class="line">next:</span><br><span class="line">    add eax, ebx</span><br><span class="line">    add ebx, 1</span><br><span class="line">    cmp ebx, 100    ; cmp: Compare</span><br><span class="line">    jbe next        ; jbe: Jumpif Below &#x2F; Equal</span><br><span class="line"></span><br><span class="line">invoke wsprintf, offset result, offset format, eax</span><br><span class="line">invoke MessageBox, 0, offset result, offset prompt, 0</span><br><span class="line"></span><br><span class="line">end main            ; 指定程序的起始执行点</span><br><span class="line">                    ; end后面的标号决定了程序刚开始运行时的eip值</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>sprintf()</code>的作用</li>
+<li><code>wsprintf()</code>：Windows内核的<code>sprintf()</code>函数</li>
+</ul>
+<h2 id="16位与32位样例"><a href="#16位与32位样例" class="headerlink" title="16位与32位样例"></a>16位与32位样例</h2><h3 id="16位样例"><a href="#16位样例" class="headerlink" title="16位样例"></a>16位样例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">abc db &quot;Hello&quot;, 0dh, 0ah, &#39;$&#39;</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">    ; mov ds, data 导致语法错误，ds不能被赋值为一个常数，解决方案：先转给一个寄存器</span><br><span class="line">    ; CPU本身不允许对ds直接赋值为常数</span><br><span class="line">    mov ax, data; 段名表示该段的段地址</span><br><span class="line">                ; data 其实是abc的段地址</span><br><span class="line">    mov ds, ax  ; ds是abc的段地址，上面两句可以写成</span><br><span class="line">                ; mov ax, seg abc</span><br><span class="line">                ; mov ds, ax</span><br><span class="line">    mov ah, 9</span><br><span class="line">    mov dx, offset abc; abc的偏移地址</span><br><span class="line">                      ; 16位汇编的地址由段地址和偏移地址构成：由两部分构成</span><br><span class="line">    int 21h; 调用操作系统的常用函数集合，编号为21h</span><br><span class="line">           ; int:interrupt中断，可理解为调用指令</span><br><span class="line">           ; 21h号函数集就是dos</span><br><span class="line">           ; ah用来规定子函数的编号</span><br><span class="line">    mov ah, 4ch; exit()</span><br><span class="line">    mov al, 0  ; al &#x3D; 返回码</span><br><span class="line">    int 21h</span><br><span class="line">code ends</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<h3 id="32位样例"><a href="#32位样例" class="headerlink" title="32位样例"></a>32位样例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">.386</span><br><span class="line">.model flat, stdcall</span><br><span class="line">option casemap :none</span><br><span class="line"></span><br><span class="line">include include\windows.inc</span><br><span class="line">include include\kernel32.inc</span><br><span class="line">include include\user32.inc</span><br><span class="line"></span><br><span class="line">includelib lib\kernel32.lib</span><br><span class="line">includelib lib\user32.lib</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line">result db 100 dup(0); dup:duplicate重复</span><br><span class="line">;char result[100]&#x3D;&#123;0&#125;;</span><br><span class="line">format db &quot;%d&quot;,0; db:define byte字节类型</span><br><span class="line">; char format[3]&#x3D;&quot;%d&quot;;</span><br><span class="line">prompt db &quot;The result&quot;,0</span><br><span class="line"></span><br><span class="line">.code</span><br><span class="line">main:         ; 标号</span><br><span class="line">    mov eax, 0; eax:extended ax</span><br><span class="line">    mov ebx, 1</span><br><span class="line">again:</span><br><span class="line">    add eax, ebx; eax&#x3D;0+1+2+3</span><br><span class="line">    add ebx, 1  ; ebx&#x3D;4</span><br><span class="line">    cmp ebx, 100; cmp:compare</span><br><span class="line">    jbe again   ; jbe:jump if below or equal</span><br><span class="line">invoke wsprintf, offset result, offset format, eax</span><br><span class="line">invoke MessageBox,0,offset result,offset prompt,0</span><br><span class="line">    ret</span><br><span class="line">end main; 指定程序的起始执行点</span><br><span class="line">         ; end后面的标号决定了程序刚开始</span><br><span class="line">         ; 运行时的eip的值。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/01/14/Assembly/image-20200113153040114.png" alt="image-20200113153040114"></p>
+<p>关于option能用到的东西，微软有<a href="https://docs.microsoft.com/en-us/cpp/assembler/masm/option-masm?view=vs-2019" target="_blank" rel="noopener">官方解释</a>。</p>
+<table>
+<thead>
+<tr>
+<th>Possible OPTION</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CASEMAP(大小写是否敏感)</td>
+<td>DOTNAME</td>
+<td>NODOTNAME</td>
+<td>EMULATOR</td>
+</tr>
+<tr>
+<td>NOEMULATOR</td>
+<td>EPILOGUE</td>
+<td>EXPR16</td>
+<td>EXPR32</td>
+</tr>
+<tr>
+<td>LANGUAGE</td>
+<td>LJMP</td>
+<td>NOLJMP</td>
+<td>M510</td>
+</tr>
+<tr>
+<td>NOM510</td>
+<td>NOKEYWORD</td>
+<td>NOSIGNEXTEND</td>
+<td>OFFSET</td>
+</tr>
+<tr>
+<td>OLDMACROS</td>
+<td>NOOLDMACROS</td>
+<td>OLDSTRUCTS</td>
+<td>NOOLDSTRUCTS</td>
+</tr>
+<tr>
+<td>PROC</td>
+<td>PROLOGUE</td>
+<td>READONLY</td>
+<td>NOREADONLY</td>
+</tr>
+<tr>
+<td>SCOPED</td>
+<td>NOSCOPED</td>
+<td>SEGMENT</td>
+<td>SETIF2.</td>
+</tr>
+</tbody></table>
+<h2 id="16或32位Assemble与Debug过程"><a href="#16或32位Assemble与Debug过程" class="headerlink" title="16或32位Assemble与Debug过程"></a>16或32位Assemble与Debug过程</h2><h3 id="32位汇编语言编程步骤演示"><a href="#32位汇编语言编程步骤演示" class="headerlink" title="32位汇编语言编程步骤演示"></a>32位汇编语言编程步骤演示</h3><p><a href="http://10.71.45.100/bhh/sum.zip" target="_blank" rel="noopener">http://10.71.45.100/bhh/sum.zip</a><br>①下载上述链接中的压缩包，解压缩后，里面有一个sum.asm是32位汇编程序的源代码;<br><a href="http://10.71.45.100/bhh/masm32.zip" target="_blank" rel="noopener">http://10.71.45.100/bhh/masm32.zip</a><br>②下载上述链接中的压缩包，解压缩后，生成masm32文件夹，里面包含了32位汇编语言的编译程序;<br>③双击masm32\qeditor.exe运行32位汇编语言集成环境<br>④在集成环境中打开sum.asm(此文件要事先拷到masm32文件夹内,即和qeditor.exe放在一起);<br>⑤点菜单project-&gt;build all进行编译，生成sum.exe<br>⑥点菜单project-&gt;run program运行sum.exe</p>
+<h3 id="16位汇编与32位汇编的区别"><a href="#16位汇编与32位汇编的区别" class="headerlink" title="16位汇编与32位汇编的区别"></a>16位汇编与32位汇编的区别</h3><p>(1) 宽度的区别<br>16位汇编是在<code>dos</code>环境下的汇编语言;<br>32位汇编是在<code>windows</code>或<code>linux</code>环境下的汇编语言;<br>16位汇编的寄存器是16位的，地址也是16位的;<br>而32位汇编的寄存器是32位，地址也是32位。<br>(2) 调用操作系统函数时有区别<br>例如在屏幕上输出一句话，32位汇编可以调用<br><code>MessageBox</code>这个函数，通过弹框输出;<br>16位汇编要调用<code>int 21h</code>的9号功能;<br>使用16位的寄存器及地址与使用32位的寄存器及地址在语法上差别不大，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov ax, 1; 16位寄存器</span><br><span class="line">mov eax, 1; 32位寄存器</span><br><span class="line">mov word ptr ds:[1000h], 1234h; 16位地址</span><br><span class="line">mov word ptr ds:[00401000h], 1234h; 32位地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="16位汇编语言编程步骤演示"><a href="#16位汇编语言编程步骤演示" class="headerlink" title="16位汇编语言编程步骤演示"></a>16位汇编语言编程步骤演示</h3><ol>
+<li><p>xp虚拟机中如何对h02.asm(<a href="http://10.71.45.100/bhh/h02.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/h02.asm</a>)进行编译?</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(1) 复制h02.asm到d:\masm</span><br><span class="line">(2) 开始-&gt;运行-&gt;<span class="built_in">command</span>  进入虚拟dos窗口</span><br><span class="line">(3) d:         进入d:盘</span><br><span class="line">(4) <span class="built_in">cd</span> \masm  进入d:\masm文件夹</span><br><span class="line">(5) masm h02; 把h02.asm编译成h02.obj</span><br><span class="line">(6) link h02; 把h02.obj连接成h02.exe</span><br><span class="line">(7) h02        运行h02.exe</span><br><span class="line">(8) <span class="built_in">exit</span>       关闭dos窗口</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>dosbox86中如何对h02.asm(<a href="http://10.71.45.100/bhh/h02.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/h02.asm</a>)进行编译?<br> 2.1 集成环境编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(1)先复制h02.asm到dosbox86\masm</span><br><span class="line">(2)运行dosbox86</span><br><span class="line">(3)file-&gt;open-&gt;h02.asm</span><br><span class="line">(4)assemble-&gt;assemble 编译</span><br><span class="line">(5)assemble-&gt;link 连接</span><br><span class="line">(6)run-&gt;run</span><br><span class="line">(7)debug-&gt;user screen查看运行结果</span><br></pre></td></tr></table></figure>
+
+<p>2.2 命令行编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">file-&gt;dos shell</span><br><span class="line">masm h02; 编译: 把h02.asm编译成h02.obj</span><br><span class="line">link h02; 连接: 把h02.obj连接成h02.exe</span><br><span class="line">h02        运行</span><br><span class="line"><span class="built_in">exit</span>       返回集成环境</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="如何调试汇编语言程序"><a href="#如何调试汇编语言程序" class="headerlink" title="如何调试汇编语言程序"></a>如何调试汇编语言程序</h3><p>(1)在<code>dosbox86</code>集成环境中选菜单<code>debug</code>可以对16位汇编语言程序进行调试:在完成编译连接后点菜单<code>debug-&gt;debug</code>,再点菜单<br><code>view-&gt;cpu;</code><br>也可以在<code>xp</code>虚拟机的命令行(开始-&gt;运行-&gt;command)或dosbox86命令行(file-&gt;dos shell)中输入以下命令对h02.exe进行调试:<br><code>masm h02;</code><br><code>link h02;</code><br><code>td h02.exe</code><br>其中td的全名为Turbo Debugger。<br>寄存器<code>ax</code>分成左8位(名为<code>ah</code>)及右8位(名为<code>al</code>)。<br>F8 单步执行</p>
+<p>(2)windows环境下的32位汇编语言程序用<code>qeditor</code>集成环境编译成exe后，可以用<code>OllyDbg</code>打开该exe进行调试。</p>
+<p>(3)<code>linux</code>环境下的32位汇编语言程序可以用<code>gdb</code>调试:<br><code>linux</code>汇编源程序的语法是<code>AT &amp; T</code>格式,<br>该格式中<code>mov</code>指令的方向是从左到右。<br><code>linux</code>环境下的汇编语言例子:<br><a href="http://10.71.45.100/bhh/hello_linux.zip" target="_blank" rel="noopener">http://10.71.45.100/bhh/hello_linux.zip</a></p>
+<h3 id="演示程序-把字符数组中的元素逐个取出并输出"><a href="#演示程序-把字符数组中的元素逐个取出并输出" class="headerlink" title="演示程序: 把字符数组中的元素逐个取出并输出"></a>演示程序: 把字符数组中的元素逐个取出并输出</h3><p>(<a href="http://10.71.45.100/bhh/outs.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/outs.asm</a>)<br>源程序outs.asm中, 以下语句<br><code>mov dl, s[bx]</code><br>编译后, 变成:<br><code>mov dl, [bx+0003]</code>; 其中变量的段地址ds是隐含的<br>这条机器语言指令其实等价于以下指令:<br><code>mov dl, ds:[bx+0003]</code><br><code>ds:[bx+0003]</code>表示指针<code>ds:bx+0003</code>所指的对象,其中ds是变量的段地址, <code>bx+0003</code>是变量的偏移地址。<br>根据上述分析，只要程序中引用了<code>data</code>段内的变量，则必须在程序一开始就把<code>ds</code>赋值为<code>data</code>，这样可以保证变量的段地址及偏移地址精确地指向该变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">a db &quot;ABC&quot;</span><br><span class="line">s db &quot;Hello$world!&quot;, 0Dh, 0Ah, 0</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data;这句assume的位置没有要求，放到上面下面都能编译</span><br><span class="line">main:</span><br><span class="line">;段地址不能以常数形式赋值</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov bx, 0</span><br><span class="line">next:</span><br><span class="line">   mov dl, s[bx]; 经过编译后变成mov dl, ds:[3+bx]</span><br><span class="line">   cmp dl, 0</span><br><span class="line">   je exit</span><br><span class="line">   ;int 21h, ah &#x3D; 2的功能是输出一个字符</span><br><span class="line">   ;ah&#x3D;0Ah 的功能是读取一个字符串，以回车换行为结尾，</span><br><span class="line">   ;但这一回车换行的表现在DOSBox和Windows XP的DOS command line中不一样</span><br><span class="line">   ;\n被解释为回车而\r被解释为换行</span><br><span class="line">   ;DOSBox中\n就可以被解释为回车换行，当然，输出一个多余的0Ah也就是\r并不会有什么副作用，因此为了保险我们在MASM汇编中都用回车加换行符来表示一个CRLF(Carriage Return Line Feed)</span><br><span class="line">   ;这段程序可以输出一个以零结尾的字符串</span><br><span class="line">   mov ah, 2</span><br><span class="line">   int 21h</span><br><span class="line">   add bx, 1</span><br><span class="line">   jmp next</span><br><span class="line">exit:</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br><span class="line"></span><br><span class="line">;一开始我以为masm会认为自己没有找到对应的段，不给我assume，但如果我把程序改成下面的样子也一样能够正常运行</span><br><span class="line">;assume cs:code, es:data</span><br><span class="line">;data segment</span><br><span class="line">;a db &quot;ABC&quot;</span><br><span class="line">;s db &quot;Hello$world!&quot;, 0Dh, 0Ah, 0</span><br><span class="line">;data ends</span><br><span class="line">;</span><br><span class="line">;code segment</span><br><span class="line">;main:</span><br><span class="line">;;段地址不能以常数形式赋值</span><br><span class="line">;   mov ax, data</span><br><span class="line">;   mov es, ax</span><br><span class="line">;   mov bx, 0</span><br><span class="line">;next:</span><br><span class="line">;   mov dl, es:[s+bx]; 经过编译后变成mov dl, ds:[3+bx]</span><br><span class="line">;   cmp dl, 0</span><br><span class="line">;   je exit</span><br><span class="line">;   mov ah, 2</span><br><span class="line">;   int 21h</span><br><span class="line">;   add bx, 1</span><br><span class="line">;   jmp next</span><br><span class="line">;exit:</span><br><span class="line">;   mov ah, 4Ch</span><br><span class="line">;   int 21h</span><br><span class="line">;code ends</span><br><span class="line">;end main</span><br></pre></td></tr></table></figure>
+
+<h2 id="关于段寄存器"><a href="#关于段寄存器" class="headerlink" title="关于段寄存器"></a>关于段寄存器</h2><p>段寄存器一共有四个，<code>cs, ds, es, ss</code></p>
+<p>其中<code>cs</code>是代码段寄存器，总是等于code段的段地址</p>
+<p><code>ss</code>是对战段寄存器，总是等于堆栈地址，他们通常由操作系统进行赋值</p>
+<p><code>ds</code>和<code>es</code>都是数据段寄存器，用户代码需要对他们赋值才能精确引用数据段中的变量。</p>
+<p><code>ds: data segment</code></p>
+<p><code>es: extra segment</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">mov dl, s[bx]</span><br><span class="line">mov dl, 3[bx]</span><br><span class="line">mov dl, [bx+3];意思是将ds:bx+3指向的字节赋值给dl，其中段地址ds是隐藏的</span><br><span class="line">;该表示方法类似于C语言中的星号</span><br><span class="line">;但是括号按照规定，只可以包括位移地址，不包括段地址</span><br><span class="line">;段地址:[偏移地址]表示段地址:偏移地址所指向的对象</span><br><span class="line">;这个DS冒号表示我们，应该在开始的时候对DS进行赋值，否则程序无法精确定位DS:bx+3</span><br><span class="line">;也就是程序的</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">;部分</span><br><span class="line"></span><br><span class="line">;多行注释技巧：</span><br><span class="line">comment #</span><br><span class="line">然后在井号之间不可以出现其他井号</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">;ds替换为es</span><br><span class="line">mov ax, data</span><br><span class="line">mov es, ax</span><br><span class="line"></span><br><span class="line">;后面的赋值</span><br><span class="line">mov dl, es:3[bx]</span><br><span class="line">;但是事实上程序会主动给你贴上一个es</span><br><span class="line">;原因在于assume，assume cs:code, es:data</span><br><span class="line">;简便写法</span><br><span class="line">mov dl, s[bx]</span><br><span class="line">;程序容易知道s的偏移地址是3，同时又容易知道s位于data段，于是上述语句可以转化成</span><br><span class="line">mov dl, data:[bx+3]</span><br><span class="line">;但是接下来有一个大问题：汇编指令中段地址不能用常数引用，因为此时的data是个常数，这样会导致语法错误</span><br><span class="line">;幸好我们有一个假设。data和es register有关联，让编译器知道当前的data可以用es来代替</span><br><span class="line"></span><br><span class="line">;值得注意的是，data的段地址在编译的时候无法得知</span><br><span class="line">;只有在运行时候才能知道</span><br><span class="line">;为什么？：</span><br><span class="line">comment #</span><br><span class="line">编译器</span><br><span class="line">没有办法</span><br><span class="line">检验操作系统运行时对程序分配的内存</span><br><span class="line">要注意assume只是一个假设，系统不会自动对es&#x2F;ds进行赋值，因此下面的语句是必要的</span><br><span class="line">mov ax, data</span><br><span class="line">mov es, ax</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+
+<h3 id="在cs中直接添加变量"><a href="#在cs中直接添加变量" class="headerlink" title="在cs中直接添加变量"></a>在<code>cs</code>中直接添加变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">a db &quot;ABC&quot;</span><br><span class="line">s db &quot;Hello$world!&quot;, 0Dh, 0Ah, 0</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">assume cs:code, es:data</span><br><span class="line">opt db &quot;Hey You!&quot;, 0Dh, 0Ah, 0</span><br><span class="line">main:</span><br><span class="line">again:</span><br><span class="line">    ;这里opt[bx]也是可以直接用的，因为编译器已经知道了我们的opt就是在code段的</span><br><span class="line">    mov dl, opt[bx]</span><br><span class="line">    cmp dl, 0</span><br><span class="line">    je part1_end</span><br><span class="line">    mov ah, 2</span><br><span class="line">    int 21h</span><br><span class="line">    add bx, 1</span><br><span class="line">    jmp again</span><br><span class="line">part1_end:</span><br><span class="line">    ;段地址不能以常数形式赋值</span><br><span class="line">    mov ax, data</span><br><span class="line">    mov es, ax</span><br><span class="line">    mov bx, 0</span><br><span class="line">next:</span><br><span class="line">    mov dl, s[bx]; 经过编译后变成mov dl, ds:[3+bx]</span><br><span class="line">    cmp dl, 0</span><br><span class="line">    je exit</span><br><span class="line">    mov ah, 2</span><br><span class="line">    int 21h</span><br><span class="line">    add bx, 1</span><br><span class="line">    jmp next</span><br><span class="line">exit:</span><br><span class="line">    mov ah, 4Ch</span><br><span class="line">    int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是，变量（例如<code>opt</code>）千万不能在<code>code segment</code>内被执行到，否则会死机。</p>
+<h2 id="变量定义"><a href="#变量定义" class="headerlink" title="变量定义"></a>变量定义</h2><p><code>db dw dd dq dt</code>: define byte, define word, define double word, define quadruple word, define byte</p>
+<p><code>d</code>表示<code>define</code>， 后面的字母表示大小</p>
+<p>汇编语言中，只定义大小，不区分符号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x db -1; 1111 1111</span><br><span class="line">x db 0ffh; 1111 1111</span><br><span class="line">; 区分这两者</span><br><span class="line">mov al, -1</span><br><span class="line">mov bl, -2</span><br><span class="line">mul bl;无符号乘法</span><br><span class="line">imul bl;有符号乘法</span><br></pre></td></tr></table></figure>
+
+<p><code>dd</code>不仅可以定义32位整数，也可以定义32位<code>float</code></p>
+<p><code>dq</code>不仅可以定义64位整数，也可以定义64位<code>double</code>，在C中64位整数没有标准（<code>gcc</code>用<code>long long int</code>，<code>Visual Studio</code>用<code>__int64</code>）</p>
+<p><code>dt</code>十字节的小数，相当于<code>C</code>的<code>long double</code>，用<code>%Lf</code>输出<code>long double</code></p>
+<h2 id="小端规则Little-Endian"><a href="#小端规则Little-Endian" class="headerlink" title="小端规则Little-Endian"></a>小端规则<code>Little-Endian</code></h2><h3 id="关于截断与填充"><a href="#关于截断与填充" class="headerlink" title="关于截断与填充"></a>关于截断与填充</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> <span class="keyword">int</span> a = <span class="number">0x12345678</span>;</span><br><span class="line"><span class="comment">//小端存储为</span></span><br><span class="line"><span class="number">1000</span> <span class="number">0x78</span>；</span><br><span class="line"><span class="number">1001</span> <span class="number">0x56</span>；</span><br><span class="line"><span class="number">1002</span> <span class="number">0x34</span>；</span><br><span class="line"><span class="number">1003</span> <span class="number">0x12</span>；</span><br><span class="line"></span><br><span class="line">short <span class="keyword">int</span> b;</span><br><span class="line">b = a;</span><br><span class="line">b = <span class="number">0x5678</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> a = <span class="number">-1</span>;  <span class="comment">//二进制=1111 1111B</span></span><br><span class="line">short <span class="keyword">int</span> b;</span><br><span class="line">b = a;   <span class="comment">//b的二进制=1111 1111 1111 1111</span></span><br><span class="line"><span class="keyword">char</span> a = <span class="number">127</span>; <span class="comment">//二进制=0111 1111B</span></span><br><span class="line">short <span class="keyword">int</span> b;</span><br><span class="line">b = a;   <span class="comment">//b的二进制=0000 0000 0111 1111</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">实际上，这么说并不正确，因为C语言标准对于这些长度的定义是：</span></span><br><span class="line"><span class="comment">Char是一字节</span></span><br><span class="line"><span class="comment">Short是至少两字节</span></span><br><span class="line"><span class="comment">Int是至少两字节</span></span><br><span class="line"><span class="comment">Long是至少四字节</span></span><br><span class="line"><span class="comment">8个字节的char也不是不可以</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*零扩充和符号扩充*/</span></span><br><span class="line">当把一个宽度较小的值赋给宽度较大的变量时，会发生扩充。</span><br><span class="line">扩充包括零扩充及符号扩充两种。</span><br><span class="line"><span class="keyword">char</span> a = <span class="number">-1</span>;  二进制=<span class="number">1111</span> <span class="number">1111B</span></span><br><span class="line">short <span class="keyword">int</span> b;</span><br><span class="line">b = a;   b的二进制=<span class="number">1111</span> <span class="number">1111</span> <span class="number">1111</span> <span class="number">1111</span></span><br><span class="line"><span class="keyword">char</span> a = <span class="number">127</span>; 二进制=<span class="number">0111</span> <span class="number">1111B</span></span><br><span class="line">short <span class="keyword">int</span> b;</span><br><span class="line">b = a;   b的二进制=<span class="number">0000</span> <span class="number">0000</span> <span class="number">0111</span> <span class="number">1111</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> a = <span class="number">0x80</span>; 二进制=<span class="number">1000</span> <span class="number">0000B</span></span><br><span class="line">short <span class="keyword">int</span> b;</span><br><span class="line">b = a;   b的二进制=<span class="number">0000</span> <span class="number">0000</span> <span class="number">1000</span> <span class="number">0000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> a = <span class="number">-1</span>; 二进制=<span class="number">1111</span> <span class="number">1111B</span></span><br><span class="line"><span class="keyword">unsigned</span> short <span class="keyword">int</span> b;</span><br><span class="line">b = a;   b的二进制=<span class="number">1111</span> <span class="number">1111</span> <span class="number">1111</span> <span class="number">1111B</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="小端规则的好处"><a href="#小端规则的好处" class="headerlink" title="小端规则的好处"></a>小端规则的好处</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> <span class="keyword">int</span> a = <span class="number">0x12345678</span>;</span><br><span class="line"><span class="comment">//小端存储为</span></span><br><span class="line"><span class="number">1000</span> <span class="number">0x78</span>；</span><br><span class="line"><span class="number">1001</span> <span class="number">0x56</span>；</span><br><span class="line"><span class="number">1002</span> <span class="number">0x34</span>；</span><br><span class="line"><span class="number">1003</span> <span class="number">0x12</span>；</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> b;</span><br><span class="line">b = a;</span><br><span class="line"><span class="comment">//可以直接转化为</span></span><br><span class="line">b = *(<span class="keyword">char</span> *)&amp;a;</span><br></pre></td></tr></table></figure>
+
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">       <span class="keyword">unsigned</span> short <span class="keyword">int</span> a = <span class="number">0x1234</span>;</span><br><span class="line">       <span class="keyword">unsigned</span> <span class="keyword">char</span> *p;</span><br><span class="line">       p = (<span class="keyword">unsigned</span> <span class="keyword">char</span> *)&amp;a;</span><br><span class="line">       <span class="built_in">printf</span>(<span class="string">"%X %X"</span>, p[<span class="number">0</span>], p[<span class="number">1</span>]);</span><br><span class="line">       <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">       <span class="keyword">unsigned</span> <span class="keyword">char</span> a[<span class="number">2</span>]=&#123;<span class="number">0x12</span>, <span class="number">0x34</span>&#125;;</span><br><span class="line">       <span class="keyword">unsigned</span> short <span class="keyword">int</span> *p;</span><br><span class="line">       p = (<span class="keyword">unsigned</span> short <span class="keyword">int</span> *)a;</span><br><span class="line">       <span class="built_in">printf</span>(<span class="string">"%X"</span>, *p);</span><br><span class="line">       <span class="built_in">printf</span>(<span class="string">"%X"</span>, *(p+<span class="number">1</span>));</span><br><span class="line">       <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="运算"><a href="#运算" class="headerlink" title="运算"></a>运算</h2><h3 id="加减乘除"><a href="#加减乘除" class="headerlink" title="加减乘除"></a>加减乘除</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">div 除法 divide 求余</span><br><span class="line">add reg, reg</span><br><span class="line">add reg, mem</span><br><span class="line">add reg, const</span><br><span class="line">add mem, reg</span><br><span class="line">add mem, const</span><br><span class="line">; 注意，不能add mem, mem</span><br><span class="line">add word ptr ds:[1000h]</span><br><span class="line">; 但是，这里是不需要做ptr 修饰的，因为寄存器的宽度都是已知的</span><br><span class="line">add ds:[1000h], ax</span><br><span class="line">add ax, ds:[1000h]</span><br><span class="line">; 在汇编语言中，mov add sub操作都要是等宽的</span><br><span class="line"></span><br><span class="line">; 上述所有的add操作都可以用于mov指令</span><br><span class="line">; 例如mov mem, mem是不允许的</span><br></pre></td></tr></table></figure>
+
+<p>注意，汇编语言中常数没有宽度，例如1可以实8位也可以是16位也可以是32位。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">word ptr 相当于C语言中的 short int *, 其中ptr是pointer的缩写</span><br><span class="line">byte ptr 相当于C语言中的 char *</span><br><span class="line">dword 相当于C语言中的 long int *</span><br></pre></td></tr></table></figure>
+
+<h3 id="位运算"><a href="#位运算" class="headerlink" title="位运算"></a>位运算</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> &amp;     |      ^      ~      &lt;&lt;     &gt;&gt;</span><br><span class="line">and   or    xor    not    shl    shr</span><br><span class="line"></span><br><span class="line">_rotl()    _rotr()</span><br><span class="line">;实际上，在较为新颖的系统中，这种方式很少能够被使用，在白老师给出的XP环境下，VC定义了_rol8()和_ror8()</span><br><span class="line">;但他们并没有按照我认为的方式进行工作</span><br><span class="line">;更为保险的方式还是自己写一个相关的rol和ror函数，参考下面的c语言代码</span><br><span class="line"></span><br><span class="line">rol          ror</span><br><span class="line"></span><br><span class="line">shl: shift left</span><br><span class="line">shr: shift right</span><br><span class="line">xor: exclusive or</span><br><span class="line">rol: rotate left 循环左移</span><br><span class="line">ror: rotate right 循环右移</span><br><span class="line"></span><br><span class="line">mov ah, 9Dh ; AH&#x3D;1001 1101</span><br><span class="line">rol ah, 1   ; AH&#x3D;0011 1011</span><br><span class="line">mov ah, 9Dh; AH&#x3D;1001 1101</span><br><span class="line">mov cl, 2</span><br><span class="line">rol ah, cl  ; AH&#x3D;0111 0110</span><br></pre></td></tr></table></figure>
+
+<p>对应的C语言代码可以是：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">rol</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> x, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">return</span> x &lt;&lt; n | x &gt;&gt; (<span class="keyword">sizeof</span>(x)*<span class="number">8</span>-n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="位运算的作用"><a href="#位运算的作用" class="headerlink" title="位运算的作用"></a>位运算的作用</h3><ol>
+<li>与运算可以使某些位变为0（变为0的是0所在的位置）</li>
+<li>或运算可以使某些位变为1（变为1的是1所在的位置）</li>
+<li>亦或运算可以使某些位反转（反转的位置是0）</li>
+</ol>
+<h3 id="样例：输出16-32位整数"><a href="#样例：输出16-32位整数" class="headerlink" title="样例：输出16/32位整数"></a>样例：输出16/32位整数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">abc dw 32767</span><br><span class="line">s db 4 dup(0),0Dh,0Ah,&#39;$&#39;</span><br><span class="line">;4 dup(0)相当于0,0,0,0</span><br><span class="line">;s[0]&#x3D;&#39;7&#39;; s[1]&#x3D;&#39;F&#39;; s[2]&#x3D;&#39;F&#39;; s[3]&#x3D;&#39;F&#39;</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov ax, abc</span><br><span class="line">   mov cx, 4</span><br><span class="line">   mov di, 0; 目标数组的下标,可以引用s[di]</span><br><span class="line">again:</span><br><span class="line">   push cx</span><br><span class="line">   mov cl, 4 ; 设ax的原值&#x3D;7A9Dh</span><br><span class="line">   rol ax, cl; AX&#x3D;A9D7, 9D7A, D7A9, 7A9D</span><br><span class="line">   push ax   ; 用完了AX的值就立即储存到堆栈之中</span><br><span class="line">   and ax, 0000000000001111B; 000Fh</span><br><span class="line">   cmp ax, 10</span><br><span class="line">   jb is_digit</span><br><span class="line">is_alpha:</span><br><span class="line">   sub al, 10</span><br><span class="line">   add al, &#39;A&#39;</span><br><span class="line">   jmp finish_4bits</span><br><span class="line">is_digit:</span><br><span class="line">   add al, &#39;0&#39;</span><br><span class="line">finish_4bits:</span><br><span class="line">   mov s[di], al</span><br><span class="line">   pop ax</span><br><span class="line">   pop cx</span><br><span class="line">   add di, 1</span><br><span class="line">   sub cx, 1</span><br><span class="line">   jnz again</span><br><span class="line">   ; int 21h, ah &#x3D; 9的功能是输出以$为结尾的字符串，该符号不输出</span><br><span class="line">   mov ah, 9</span><br><span class="line">   mov dx, offset s</span><br><span class="line">   int 21h</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">.386; DOS中如何使用32位寄存器?使用.386并且在data segment和code segment中使用use16</span><br><span class="line">data segment use16</span><br><span class="line">abc dd 2147483647</span><br><span class="line">s db 8 dup(0),0Dh,0Ah,&#39;$&#39;</span><br><span class="line">data ends</span><br><span class="line">code segment use16</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov eax, abc</span><br><span class="line">   mov cx, 8</span><br><span class="line">   mov di, 0; 目标数组的下标,可以引用s[di]</span><br><span class="line">again:</span><br><span class="line">   rol eax, 4; 386以上cpu中, 移位次数大于1时也可</span><br><span class="line">             ; 使用常数</span><br><span class="line">   push eax  ; 设eax&#x3D;12345678h</span><br><span class="line">   and eax, 0Fh; eax&#x3D;00000008h, al&#x3D;08h</span><br><span class="line">   cmp al, 10</span><br><span class="line">   jb is_digit</span><br><span class="line">is_alpha:</span><br><span class="line">   sub al, 10</span><br><span class="line">   add al, &#39;A&#39;</span><br><span class="line">   jmp finish_4bits</span><br><span class="line">is_digit:</span><br><span class="line">   add al, &#39;0&#39;</span><br><span class="line">finish_4bits:</span><br><span class="line">   mov s[di], al</span><br><span class="line">   pop eax; push 和 pop操作可以保护eax不被各种操作损坏</span><br><span class="line">   add di, 1</span><br><span class="line">   sub cx, 1</span><br><span class="line">   jnz again</span><br><span class="line">   mov ah, 9</span><br><span class="line">   mov dx, offset s</span><br><span class="line">   int 21h</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="段地址和偏移地址以及引用数组元素"><a href="#段地址和偏移地址以及引用数组元素" class="headerlink" title="段地址和偏移地址以及引用数组元素"></a>段地址和偏移地址以及引用数组元素</h2><h3 id="段地址-偏移地址"><a href="#段地址-偏移地址" class="headerlink" title="段地址:偏移地址"></a>段地址:偏移地址</h3><p><strong>编程的时候只能使用逻辑地址，不能使用物理地址。</strong></p>
+<p>段起始地址的16进制个位必须=0, 否则不能成为段起始地址</p>
+<p>12340到2233f为止的地址就是一个段，称为<code>segment</code></p>
+<p><code>10000h = 16^4 = 2^16 = 2^6*1024 = 64k</code></p>
+<p><code>1k = 2^10 = 2^4*2^4*2^2 = 011000000000 = 400h</code></p>
+<p><code>段长度=2233F-12340+1=22340-12340=10000h=64K</code></p>
+<p><code>段起始地址 12340h 00h 1234:0000</code></p>
+<p><code>12341h 11h 1234:0001</code></p>
+<p><code>…… 22h</code></p>
+<p><code>12350h 33h 段起始地址</code></p>
+<p><code>1234段 …… 44h</code></p>
+<p><code>1235:0048 12398h 55h  1234:0058</code></p>
+<p><code>…… 66h   1235段</code></p>
+<p><code>段结束地址 2233Fh 77h  1234:FFFF</code></p>
+<p><code>…… 88h</code></p>
+<p><code>2234Fh 99h 段结束地址</code></p>
+<p>一个物理地址可以表示成多个逻辑地址, 例如:</p>
+<p>12398h=1234:0058=1235:0048=1236:0038</p>
+<p>=1230:0098</p>
+<p>作为段首地址，它最右边的值必须为零。</p>
+<p>段和段之间允许重叠。</p>
+<p><strong>段地址的1相当于偏移地址的10h:</strong></p>
+<p><strong>段地址+1就意味着偏移地址-10h;</strong></p>
+<p><strong>段地址-1就意味着偏移地址+10h;</strong></p>
+<p>为什么要搞成段地址：物理地址的形式呢?</p>
+<p>原因在于8086的寄存器全部都是16位的</p>
+<p>假定要用<code>bx</code>作为指针引用某个变量的值</p>
+<p>因为<code>bx</code>只有16位</p>
+<p>所以<code>mov bx, [12398h]</code></p>
+<p>是无法实现的</p>
+<p>但现在，我们有一段128k的数据，而1个段有64k，该如何实现？</p>
+<p>第一个段是<strong>12340</strong>填满以后 下一个段从<strong>22340</strong>开始</p>
+<p>是正确的解决方法。</p>
+<h3 id="直接寻址、间接寻址"><a href="#直接寻址、间接寻址" class="headerlink" title="直接寻址、间接寻址"></a>直接寻址、间接寻址</h3><p>设从地址1000h:2000h起存放以下4个字节:</p>
+<p><code>1000:2000 12h</code><br><code>1000:2001 34h</code><br><code>1000:2002 56h</code><br><code>1000:2003 78h</code></p>
+<p>现编程计算这4个字节之和并保存到寄存器AL中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mov ax, 1000h</span><br><span class="line">mov ds, ax</span><br><span class="line">mov al, 0</span><br><span class="line">mov bx, 2000h</span><br><span class="line">mov cx, 4</span><br><span class="line">next:</span><br><span class="line">add al, ds:[bx]</span><br><span class="line">add bx, 1</span><br><span class="line">sub cx, 1</span><br><span class="line">jnz next</span><br></pre></td></tr></table></figure>
+
+<p>可以用来表示间接寻址的寄存器：bx bp si di</p>
+<p><code>mov ax, 1000h</code><br><code>mov ds, ax; ds是数据段寄存器</code></p>
+<p>除了<code>cs</code>不能通过<code>mov</code>修改外，<code>ds、es、ss</code>均可以修改。</p>
+<p>假定要取出1000:2000指向的字节并保存到AL中, 则有两种方法:</p>
+<p>(1) 直接寻址(用常数来表示变量的偏移地址)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mov al, 1000h:[2000h]; 语法错误: 段地址必须用段</span><br><span class="line">                         ; 寄存器来表示, 不能用常数</span><br><span class="line">mov al, ds:[2000h]; ds:2000可以看作一个指针</span><br><span class="line">; ds:[2000h]表示上述指针指向</span><br><span class="line">; 的对象</span><br><span class="line">mov al, byte ptr ds:[2000h]</span><br><span class="line">; byte ptr表示对象的类型是byte</span><br><span class="line">;ptr是pointer的缩写</span><br></pre></td></tr></table></figure>
+
+<p>可以把上述语句转化成C语言语法来写:</p>
+<p><code>typedef unsigned char byte;</code></p>
+<p><code>al = *(byte *)(ds:2000h);</code></p>
+<p>(2)间接寻址(用寄存器、寄存器+常数来表示变量的偏移地址)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov bx, 2000h</span><br><span class="line">mov al, ds:[bx]; 用于间接寻址的寄存器仅限于:</span><br><span class="line">                  ; bx, bp, si, di</span><br><span class="line">mov al, byte ptr ds:[bx]</span><br></pre></td></tr></table></figure>
+
+<p>什么样的情况下, 必须使用</p>
+<p><code>byte ptr、word ptr、dword ptr</code></p>
+<p>这三种类型修饰?</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mov ds:[bx], 1; 语法错误</span><br><span class="line">mov byte ptr ds:[bx], 1; 正确①</span><br><span class="line">mov word ptr ds:[bx], 1; 正确②</span><br><span class="line">mov dword ptr ds:[bx], 1; 正确③</span><br><span class="line">1000:2000 12h01h   01h  01h</span><br><span class="line">1000:2001 34h ①    00h  00h</span><br><span class="line">1000:2002 56h        ②    00h</span><br><span class="line">1000:2003 78h              00h</span><br><span class="line">                        ③</span><br></pre></td></tr></table></figure>
+
+<h3 id="如何引用数组元素"><a href="#如何引用数组元素" class="headerlink" title="如何引用数组元素"></a>如何引用数组元素</h3><p>引用数组元素的例子: <a href="http://10.71.45.100/bhh/addr.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/addr.asm</a></p>
+<p><code>mov ah, [abc]中,</code></p>
+<p><code>[abc]</code>可以理解成地址<code>abc</code>所指向的对象。</p>
+<p><code>mov ah, [abc]的完整形式其实是:</code></p>
+<p><code>mov ah, byte ptr ds:[abc]</code></p>
+<p>其中<code>ds</code>是变量<code>abc</code>的段地址</p>
+<p><code>byte ptr</code>表示地址<code>abc</code>所指的对象是一个字节。</p>
+<p>若<code>[]</code>中不包含寄存器<code>bp</code>，则该变量默认的段地址一定是<code>ds</code>,故在源程序<code>addr.asm</code>中可以省略<code>ds</code>:。</p>
+<p><code>byte ptr</code>有点类似于<code>C</code>语言中的<code>(char *)</code>, 其中<code>ptr</code>是单词<code>pointer</code>的缩写。</p>
+<p><code>byte ptr ds:[abc]</code>表示地址<code>ds:abc</code>所指的对象是一个<code>byte</code>。相当于C语言的如下描述:</p>
+<p><code>*(char *)(ds:abc)</code></p>
+<p>汇编语言的语句中，如果源操作数或目标操作数的其中之一有明确的类型即宽度，则另外一方不需要指定类型。</p>
+<p>在本例中,由于<code>ah</code>是8位宽度，故可以省略源操作数的类型<code>byte ptr</code>。</p>
+<h3 id="如何在dosbox86中调试程序"><a href="#如何在dosbox86中调试程序" class="headerlink" title="如何在dosbox86中调试程序"></a>如何在<code>dosbox86</code>中调试程序</h3><ol>
+<li>先编译连接</li>
+<li>debug-&gt;debug</li>
+<li>view-&gt;cpu 查看机器语言</li>
+<li>F8单步跟踪</li>
+</ol>
+<h3 id="如何在命令行中调试"><a href="#如何在命令行中调试" class="headerlink" title="如何在命令行中调试"></a>如何在命令行中调试</h3><ol>
+<li>masm addr;</li>
+<li>link addr;</li>
+<li>td addr</li>
+</ol>
+<p>其中<code>td</code>指<code>Turbo Debugger</code>。</p>
+<p>微软对应的调试器叫<code>CodeView</code>，但功能不如<code>td</code>。</p>
+<p>C语言中引用数组元素的例子: <a href="http://10.71.45.100/bhh/addr.c" target="_blank" rel="noopener">http://10.71.45.100/bhh/addr.c</a></p>
+<p>编译调试<code>addr.c</code>的步骤:</p>
+<ol>
+<li>复制<code>addr.c</code>到<code>dosbox86\tc</code>中</li>
+<li>dosbox86-&gt;file-&gt;DOS shell</li>
+<li>cd \tc</li>
+<li>tc</li>
+<li>按Alt+F选择菜单file-&gt;load-&gt;addr.c</li>
+<li>按Alt+C选择菜单compile-&gt;build all</li>
+<li>按Alt+F选择菜单file-&gt;quit</li>
+<li>td addr</li>
+<li>view-&gt;cpu</li>
+<li>按F5放大窗口</li>
+<li>F8单步调试</li>
+<li>调试完成按file-&gt;quit</li>
+<li>exit 返回dosbox86集成环境<br>输入一个字符串再输出的例子: <a href="http://10.71.45.100/bhh/io.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/io.asm</a></li>
+</ol>
+<h3 id="用汇编语言控制文本方式下整个屏幕的输出"><a href="#用汇编语言控制文本方式下整个屏幕的输出" class="headerlink" title="用汇编语言控制文本方式下整个屏幕的输出:"></a>用汇编语言控制文本方式下整个屏幕的输出:</h3><p>屏幕坐标示意图: <a href="http://10.71.45.100/bhh/screen.bmp" target="_blank" rel="noopener">http://10.71.45.100/bhh/screen.bmp</a></p>
+<p>输出2000个’A’的例子: <a href="http://10.71.45.100/bhh/2000a.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/2000a.asm</a></p>
+<p>屏幕上移动的’A’的例子: <a href="http://10.71.45.100/bhh/mova.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/mova.asm</a></p>
+<h2 id="ptr"><a href="#ptr" class="headerlink" title="ptr"></a><code>ptr</code></h2><h3 id="与C的对应关系"><a href="#与C的对应关系" class="headerlink" title="与C的对应关系"></a>与<code>C</code>的对应关系</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">byte ptr,  word ptr,   dword ptr</span><br><span class="line">(char \*)  (short int \*) (long int \*)</span><br></pre></td></tr></table></figure>
+
+<h3 id="明确"><a href="#明确" class="headerlink" title="明确"></a>明确</h3><p><strong>当目标操作数与源操作数的其中之一有明确的宽度时，另外一方不需要加类型修饰</strong>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov ds:[bx], ah; 等价于mov byte ptr ds:[bx],ah</span><br><span class="line">mov ax, ds:[bx+si]</span><br><span class="line">;等价于mov ax, word ptr ds:[bx+si]</span><br></pre></td></tr></table></figure>
+
+<h3 id="不明确"><a href="#不明确" class="headerlink" title="不明确"></a>不明确</h3><p><strong>当源操作数为常数，目标操作数为变量时，则该变量必须加上类型修饰，例如</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">**mov ds:[bx], 1;** **错误**</span><br><span class="line">mov byte ptr ds:[bx], 1; 正确</span><br><span class="line">mov word ptr ds:[bx], 1; 正确</span><br><span class="line">mov dword ptr ds:[bx], 1; 正确</span><br></pre></td></tr></table></figure>
+
+<p>设ds=1000h, bx=2000h</p>
+<p>1000:2000 12h; ① à01h ②-&gt;01h ③-&gt;  01h</p>
+<p>1000:2001 34h    34h    00h    00h</p>
+<p>1000:2002 56h    56h    56h    00h</p>
+<p>1000:2003 78h    78h    78h    00h</p>
+<h2 id="assume的作用"><a href="#assume的作用" class="headerlink" title="assume的作用"></a>assume的作用</h2><p>帮助编译器建立段寄存器与段的关联, 当源程序中引用了某个段内的变量时，编译器会在编译出来的机器码中把变量的段地址替换成关联的段寄存器。</p>
+<p><strong>同一个段与多个段寄存器有关联时候，寄存器的优先级为：<code>ds ss es cs</code></strong></p>
+<p><a href="http://10.71.45.100/bhh/assume.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/assume.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">abc db 1,2,3,4</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">assume cs:code, es:data</span><br><span class="line">;同一个段与多个段寄存器有关联时:ds &gt; ss &gt; es &gt; cs</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov es, ax</span><br><span class="line">   mov al, abc[1]; 编译后变成mov al, es:[0001]</span><br><span class="line">   ;先替换成mov al, data:[0001]</span><br><span class="line">   ;再替换成mov al, es:[0001]</span><br><span class="line">   ;在替换时编译器并不检查es与data是否相等</span><br><span class="line">   ;假定前面assume ds:data,则这句话就会替换成</span><br><span class="line">   ;mov al, ds:[0001]并简化成mov al, [0001]</span><br><span class="line">   ;因为[]中没有bp时，默认的段地址一定是ds且ds</span><br><span class="line">   ;可以省略。</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h3 id="关于assume放到哪里会报错"><a href="#关于assume放到哪里会报错" class="headerlink" title="关于assume放到哪里会报错"></a>关于assume放到哪里会报错</h3><p>我们用如下的代码进行了测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">abc dw 1234h, 5678h</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">assume cs:code, es:data</span><br><span class="line">code segment</span><br><span class="line">;ss和sp的值在程序开始运行时由操作系统自动设定,</span><br><span class="line">;程序员不需要手工对它们进行赋值。</span><br><span class="line">;正如cs:ip也是在程序开始运行时由操作系统进行赋值</span><br><span class="line">;一样。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">; 放到这个语句之前就不会报错，这个语句之后就会报错：Unreachable code segment</span><br><span class="line">main:</span><br><span class="line">    push bp</span><br><span class="line">    mov bp, sp</span><br><span class="line">    mov ax, data</span><br><span class="line">    mov es, ax</span><br><span class="line"></span><br><span class="line">    mov bx, 1</span><br><span class="line">    mov bp, 0</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    ; 放到这个语句之后就会在上述Unreachable code segment之后加一个错：Cannot address with segment register</span><br><span class="line">    mov ax, data:abc[bp]</span><br><span class="line">    </span><br><span class="line">    mov sp, bp</span><br><span class="line">    pop bp</span><br><span class="line">    mov ah, 4Ch</span><br><span class="line">    int 21h</span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">stk segment stack</span><br><span class="line">;stk segment</span><br><span class="line">db 200h dup(&#39;S&#39;); 或写成dw 100h dup(0)</span><br><span class="line">stk ends</span><br><span class="line">;堆栈空间是stk:0到stk:1FF</span><br><span class="line">;程序开始运行时,ss&#x3D;stk,sp&#x3D;1FF+1</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h3 id="assume对段寄存器以及代码中用到的段地址的影响"><a href="#assume对段寄存器以及代码中用到的段地址的影响" class="headerlink" title="assume对段寄存器以及代码中用到的段地址的影响"></a><code>assume</code>对段寄存器以及代码中用到的段地址的影响</h3><p>并且，如果代码中用到的段地址都是已经关联寄存器的话，我们就可以直接用这些常量来代替所需的段寄存器</p>
+<p>例如如下代码会被会变成如下的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">abc dw 1234h, 5678h</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">;ss和sp的值在程序开始运行时由操作系统自动设定,</span><br><span class="line">;程序员不需要手工对它们进行赋值。</span><br><span class="line">;正如cs:ip也是在程序开始运行时由操作系统进行赋值</span><br><span class="line">;一样。</span><br><span class="line">assume cs:code, es:data</span><br><span class="line">main:</span><br><span class="line">    push bp</span><br><span class="line">    mov bp, sp</span><br><span class="line">    mov ax, data</span><br><span class="line">    mov es, ax</span><br><span class="line"></span><br><span class="line">    mov bx, 1</span><br><span class="line">    mov bp, 0</span><br><span class="line">    mov ax, code:abc[bp];这里强行使用了code，因为我们知道code这个数字已经和cs段寄存器做了关联</span><br><span class="line">    ;masm在编译之后会将这段代码替换为 mov ax, cs:[bp-10]</span><br><span class="line">    ;这里</span><br><span class="line"></span><br><span class="line">    mov sp, bp</span><br><span class="line">    pop bp</span><br><span class="line">    mov ah, 4Ch</span><br><span class="line">    int 21h</span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">stk segment stack</span><br><span class="line">;stk segment</span><br><span class="line">db 200h dup(&#39;S&#39;); 或写成dw 100h dup(0)</span><br><span class="line">stk ends</span><br><span class="line">;堆栈空间是stk:0到stk:1FF</span><br><span class="line">;程序开始运行时,ss&#x3D;stk,sp&#x3D;1FF+1</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/01/14/Assembly/image-20200113144631768.png" alt="image-20200113144631768"></p>
+<p>但是，值得注意的是，这里我们采用了<code>abc</code>三个字才存取变量，而编译器并不会将他们保留，而是将其替换为偏移地址，这个偏移地址是相对于<strong>最终被采用的段的相对偏移地址（如果使用了assume），或者本来所在的段的偏移地址</strong></p>
+<h2 id="图形模式编程（不考）"><a href="#图形模式编程（不考）" class="headerlink" title="图形模式编程（不考）"></a>图形模式编程（不考）</h2><h3 id="如何把显卡切换到图形模式-调用int-10h中断"><a href="#如何把显卡切换到图形模式-调用int-10h中断" class="headerlink" title="如何把显卡切换到图形模式: 调用int 10h中断"></a>如何把显卡切换到图形模式: 调用int 10h中断</h3><p>例如,要切换到分辨率320*200,颜色为256色的图形模式:</p>
+<p><code>mov ah, 0  ; 其中AH=0表示int 10h的子功能号为0</code></p>
+<p><code>mov al, 13h; 其中AL=13h代表图形模式编号</code></p>
+<p><code>int 10h   ;int 10h是与显示相关的bios中断</code></p>
+<h3 id="如何把坐标-x-y-转化成13h模式下的偏移地址"><a href="#如何把坐标-x-y-转化成13h模式下的偏移地址" class="headerlink" title="如何把坐标(x,y)转化成13h模式下的偏移地址"></a>如何把坐标(x,y)转化成13h模式下的偏移地址</h3><p>y*320+x</p>
+<h3 id="显卡内存中的一个字节表示一个点"><a href="#显卡内存中的一个字节表示一个点" class="headerlink" title="显卡内存中的一个字节表示一个点"></a>显卡内存中的一个字节表示一个点</h3><p>一个点对应一个字节,该字节的值表示该点的颜色，例如:</p>
+<p>0=黑 1=蓝 2=绿 3=青 4=红 5=洋红 6=棕 7=白</p>
+<p>8=灰 9=亮 A=亮 B=亮 C=亮 D=紫  E=黄 F=亮</p>
+<p><a href="http://10.71.45.100/bhh/block.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/block.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">code segment</span><br><span class="line">assume cs:code; cs不需要赋值会自动等于code</span><br><span class="line">main:</span><br><span class="line">   jmp begin</span><br><span class="line">i  dw 0</span><br><span class="line">begin:</span><br><span class="line">   mov ax, 0013h</span><br><span class="line">   int 10h</span><br><span class="line">   mov ax, 0A000h</span><br><span class="line">   mov es, ax</span><br><span class="line">   ;(320&#x2F;2, 200&#x2F;2)</span><br><span class="line">   mov di, (100-20)*320+(160-20); (160-20,100-20)</span><br><span class="line">   ;mov cx, 41; rows&#x3D;41</span><br><span class="line">   mov i, 41</span><br><span class="line">next_row:</span><br><span class="line">   ;push cx</span><br><span class="line">   push di</span><br><span class="line">   mov al, 4; color&#x3D;red</span><br><span class="line">   mov cx, 41; dots&#x3D;41</span><br><span class="line">next_dot:</span><br><span class="line">   mov es:[di], al</span><br><span class="line">   add di, 1</span><br><span class="line">   sub cx, 1</span><br><span class="line">   jnz next_dot</span><br><span class="line">   pop di; 左上角(x,y)对应的地址</span><br><span class="line">   ;pop cx; cx&#x3D;41</span><br><span class="line">   add di, 320; 下一行的起点的地址</span><br><span class="line">   ;sub cx, 1; 行数-1</span><br><span class="line">   sub i, 1</span><br><span class="line">   jnz next_row</span><br><span class="line">   mov ah,0</span><br><span class="line">   int 16h;bios键盘输入,类似int 21h的01h功能</span><br><span class="line">   mov ax, 0003h</span><br><span class="line">   int 10h; 切换到80*25文本模式</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://10.71.45.100/bhh/cn.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/cn.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">hz db 04h,80h,0Eh,0A0h,78h,90h,08h,90h</span><br><span class="line">   db 08h,84h,0FFh,0FEh,08h,80h,08h,90h</span><br><span class="line">   db 0Ah,90h,0Ch,60h,18h,40h,68h,0A0h</span><br><span class="line">   db 09h,20h,0Ah,14h,28h,14h,10h,0Ch</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov ax, 0A000h</span><br><span class="line">   mov es, ax</span><br><span class="line">   mov di, 0</span><br><span class="line">   mov ax, 0013h</span><br><span class="line">   int 10h</span><br><span class="line">   mov dx, 16</span><br><span class="line">   mov si, 0</span><br><span class="line">next_row:</span><br><span class="line">   mov ah, hz[si]</span><br><span class="line">   mov al, hz[si+1]</span><br><span class="line">   add si, 2</span><br><span class="line">   mov cx, 16</span><br><span class="line">check_next_dot:</span><br><span class="line">   shl ax, 1; 刚移出的位会自动进入CF(进位标志)</span><br><span class="line">   jnc no_dot; 若没有进位即CF&#x3D;0则跳到no_dot</span><br><span class="line">is_dot:</span><br><span class="line">   mov byte ptr es:[di], 0Ch</span><br><span class="line">no_dot:</span><br><span class="line">   add di, 1</span><br><span class="line">   sub cx, 1</span><br><span class="line">   jnz check_next_dot</span><br><span class="line">   sub di, 16</span><br><span class="line">   add di, 320</span><br><span class="line">   sub dx, 1</span><br><span class="line">   jnz next_row</span><br><span class="line">   mov ah, 1</span><br><span class="line">   int 21h</span><br><span class="line">   mov ax, 0003h</span><br><span class="line">   int 10h</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://10.71.45.100/bhh/cnt.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/cnt.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">hz db 04h,80h,0Eh,0A0h,78h,90h,08h,90h</span><br><span class="line">   db 08h,84h,0FFh,0FEh,08h,80h,08h,90h</span><br><span class="line">   db 0Ah,90h,0Ch,60h,18h,40h,68h,0A0h</span><br><span class="line">   db 09h,20h,0Ah,14h,28h,14h,10h,0Ch</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov ax, 0B800h</span><br><span class="line">   mov es, ax</span><br><span class="line">   mov ax, 0003h</span><br><span class="line">   int 10h</span><br><span class="line">   mov di, 0</span><br><span class="line">   mov dx, 16</span><br><span class="line">   mov si, 0</span><br><span class="line">next_row:</span><br><span class="line">   mov ah, hz[si]</span><br><span class="line">   mov al, hz[si+1]</span><br><span class="line">   add si, 2</span><br><span class="line">   mov cx, 16</span><br><span class="line">check_next_dot:</span><br><span class="line">   shl ax, 1</span><br><span class="line">   jnc no_dot</span><br><span class="line">is_dot:</span><br><span class="line">   mov byte ptr es:[di], &#39;*&#39;</span><br><span class="line">   mov byte ptr es:[di+1], 0Ch</span><br><span class="line">no_dot:</span><br><span class="line">   add di, 2</span><br><span class="line">   sub cx, 1</span><br><span class="line">   jnz check_next_dot</span><br><span class="line">   sub di, 32</span><br><span class="line">   add di, 160</span><br><span class="line">   sub dx, 1</span><br><span class="line">   jnz next_row</span><br><span class="line">   mov ah, 1</span><br><span class="line">   int 21h</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h2 id="ss-sp及堆栈段"><a href="#ss-sp及堆栈段" class="headerlink" title="ss:sp及堆栈段"></a><code>ss:sp</code>及堆栈段</h2><p><code>ss:stack segment</code></p>
+<p><code>sp:stack pointer</code></p>
+<p>堆栈指针, 表示堆栈顶端的偏移地址,</p>
+<p>而<code>ss</code>则用来表示堆栈的段地址。</p>
+<p>但是不能用<code>[sp]</code>或<code>[sp+常数或其它寄存器]</code>的形式来引用某个变量。为了弥补<code>sp</code>不能表示间接地址的缺陷，同时也为了凑齐4个偏移地址寄存器，于是从通用寄存器中找来<code>bx</code>作为<code>sp</code>的替补，于是就有了以下4个偏移地址寄存器:</p>
+<p><code>bx, bp, si, di</code></p>
+<p>即这4个寄存器都可以放在[]中表示变量的偏移地址。</p>
+<p><code>[ax], [cx], [dx]</code>均是错误的。</p>
+<p><code>push abc[0]</code>的过程:</p>
+<p>①<code>sp = sp – 2 = 200h – 2 = 1FEh</code></p>
+<p>②把<code>push</code>后面所跟的值保存到<code>ss:sp</code>当前指向的内存单元中</p>
+<p><code>ss:1FE 34hß</code></p>
+<p><code>ss:1FF 12h</code></p>
+<p><code>pop abc[2]</code>的过程:</p>
+<p>①把当前<code>ss:sp</code>指向的字取出来, 保存到<code>pop</code>后面所跟的变量中</p>
+<p>②<code>sp = sp + 2</code></p>
+ <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">也就是说我们平常写程序时候用到的</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">int</span> top = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> <span class="built_in">stack</span>[MAXSIZE];</span><br><span class="line"><span class="built_in">stack</span>[top++] = foo;</span><br><span class="line">foo = <span class="built_in">stack</span>[--top];</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">与实际CPU管理的栈有所不同</span></span><br><span class="line"><span class="comment">如果要模拟这个栈可以这样写</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">int</span> top = MAXSIZE;</span><br><span class="line"><span class="keyword">int</span> <span class="built_in">stack</span>[MAXSIZE];</span><br><span class="line"><span class="built_in">stack</span>[--top] = foo;</span><br><span class="line">foo = <span class="built_in">stack</span>[top++];</span><br><span class="line"><span class="comment">// 这里用int实际上是不太对，因为16位汇编对应的栈的大小是16bit也就是一个word，这个可以通过#include &lt;Windows.h&gt;</span></span><br><span class="line"><span class="comment">// 然后使用WORD这个typedef来确定</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">也就是说栈实际上是向上长的，一般初始的sp值都会是0，用以达到对栈的最大利用率</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>堆栈段的定义及使用。例如: <a href="http://10.71.45.100/bhh/ss.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/ss.asm</a></p>
+<p>代码中<code>push word ptr ds:[0]</code>时,</p>
+<p><code>sp=sp-2=200h-2=1FE</code></p>
+<p>再把<code>ds:[0]</code>里面的值<code>1234h</code>保存到<code>ss:1FE</code>里面</p>
+<p>而<code>pop word ptr ds:[2]</code>时, 先取出当前<code>ss:sp</code>指向的</p>
+<p><code>16</code>位值即<code>1234h</code>并保存到<code>ds:[2]</code>中, 再做<code>sp=sp+2</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">data segment</span><br><span class="line">abc dw 1234h, 5678h</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data, ss:stk</span><br><span class="line">;ss和sp的值在程序开始运行时由操作系统自动设定,</span><br><span class="line">;程序员不需要手工对它们进行赋值。</span><br><span class="line">;正如cs:ip也是在程序开始运行时由操作系统进行赋值</span><br><span class="line">;一样。</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   push abc[0]</span><br><span class="line">   pop abc[2]</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">stk segment stack</span><br><span class="line">db 200h dup(0); 或写成dw 100h dup(0)</span><br><span class="line">stk ends</span><br><span class="line">;堆栈空间是stk:0到stk:1FF</span><br><span class="line">;程序开始运行时,ss&#x3D;stk,sp&#x3D;1FF+1</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/01/14/Assembly/image-20200113133812773.png" alt="image-20200113133812773"></p>
+<p>这是在程序中删除<code>stk segment stack</code>上<code>stack</code>关键字之后的结果，可以发现<code>ss``sp</code>并没有被正确赋值</p>
+<p><img src="/2020/01/14/Assembly/image-20200113133054960.png" alt="image-20200113133054960"></p>
+<p><img src="/2020/01/14/Assembly/image-20200113133601232.png" alt="image-20200113133601232"></p>
+<h3 id="堆栈段的使用样例与详细记录"><a href="#堆栈段的使用样例与详细记录" class="headerlink" title="堆栈段的使用样例与详细记录"></a>堆栈段的使用样例与详细记录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line">data1 segment</span><br><span class="line">abc dw 1234h, 5678h</span><br><span class="line">data1 ends</span><br><span class="line">data2 segment</span><br><span class="line">abc2 dw 0eeffh, 0ccddh</span><br><span class="line">data2 ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data1, ss:stk, es:data2;有了assume就可以直接使用内容</span><br><span class="line">;ss和sp的值在程序开始运行时由操作系统自动设定,</span><br><span class="line">;程序员不需要手工对它们进行赋值。于是ss:sp就可以定位到stack的末尾，ss是stack的段地址，sp是堆栈段的长度，本程序中是200h</span><br><span class="line">;正如cs:ip也是在程序开始运行时由操作系统进行赋值</span><br><span class="line">;一样。cs会被赋值为code的段地址，ip等于main的偏移地址，于是cs:ip就可以定位到main</span><br><span class="line">;只不过，ds不会被操作系统自动赋值</span><br><span class="line"></span><br><span class="line">;但是ds和es的值不是随机数，是dos主动分配的一个东西</span><br><span class="line">;而是一个段地址，名字叫程序段前缀 program segment prefix</span><br><span class="line">;长度为100字节，用于保存当前exe的一些相关信息</span><br><span class="line">;此时查看ds:[100h]就可以得到实际上data段的内容</span><br><span class="line"></span><br><span class="line">; 我们以为，data后面内容结束以后紧跟着就是code段的开始，但是实际上不行，因为cs此时无法作为一个有效的段地址</span><br><span class="line">; 因为段必须从零开始，所以在后面补上一些零，让前面的ds:0040h变成ds:0010h使得下一个段可以刚好开始</span><br><span class="line">main:</span><br><span class="line">    mov ax, data1</span><br><span class="line">    mov ds, ax</span><br><span class="line">    mov ax, word ptr ds:0h; This line does not genetate any error</span><br><span class="line">    ; mov ax, word ptr ds:0ee; This line genetates error</span><br><span class="line">    mov ax, word ptr ds:010; This line does not genetate any error</span><br><span class="line">    mov ax, ds:010; This line does not genetate error</span><br><span class="line">    ; mov ax, ds:bx; This line genetates error</span><br><span class="line">    mov ax, ds:[bx]; This line does not genetate any error</span><br><span class="line">    ; Which means that:</span><br><span class="line">    ; 1. you can omit the square brackets</span><br><span class="line">    ; 2. you can use h to specify that it&#39;s a hex number(masm interprets numbers as decimal)</span><br><span class="line">    ;    while td does the opposite(as hexadecimal)</span><br><span class="line">    mov bx, 10</span><br><span class="line">    mov ax, 5</span><br><span class="line">    sub ax, bx</span><br><span class="line">    push abc2[0h]</span><br><span class="line">    pop abc2[2h]</span><br><span class="line">    push abc[0h];相当于push 1234h, 它具体做了什么列举如下</span><br><span class="line">    ; sp &#x3D; sp - 2</span><br><span class="line">    ; word ptr ss:[sp] &#x3D; abc[0]</span><br><span class="line"></span><br><span class="line">    pop abc[2h];相当于将堆栈中的东西写进abc[2]</span><br><span class="line">    ; abc[2] &#x3D; word ptr ss:[sp]</span><br><span class="line">    ; sp &#x3D; sp + 2</span><br><span class="line"></span><br><span class="line">    ; 堆栈操作可以用活页纸来形象地比喻</span><br><span class="line">    ; 弹簧就是sp</span><br><span class="line">    ; 纸就是我们要放的东西</span><br><span class="line"></span><br><span class="line">    ; 需要保证堆栈的平衡，否则push pop就会导致错误</span><br><span class="line"></span><br><span class="line">    ; 32汇编中的push与pop实际上和16没有太大的区别</span><br><span class="line">    ; 就是挖坑大小的问题</span><br><span class="line">    ; mov ax, ss:[sp]语法错误</span><br><span class="line">    ; mov eax, ss:[esp]可以（英文Intel解除了某些限制）</span><br><span class="line">    ; 那么应该如何绕过这个限制：</span><br><span class="line">    mov bp, sp</span><br><span class="line">    ; mov ax, ss:[bp]</span><br><span class="line">    mov ax, [bp];bp的冒号可以省略，因为bp的默认段地址也是ss(也可以用其他的东西)</span><br><span class="line"></span><br><span class="line">    ; push的单位只能是word或者double word</span><br><span class="line">    ; 单个字节绝不可以进行8位操作，这是语法规定的不允许的</span><br><span class="line">    ; 那如果我要，就使用ax吧</span><br><span class="line"></span><br><span class="line">comment #</span><br><span class="line">    关于cf，进行借位的时候就会stc</span><br><span class="line">    还有一种操作是adc，就是带着carry flag进行加法</span><br><span class="line">    这样就不需要跳转，直接加出来就可以得到cf的值</span><br><span class="line">    mov ah, 0</span><br><span class="line">    adc ah, </span><br><span class="line">    clc是清除借位标志，stc就是让cf等于一，cmc就是complement carry flag，让cf进行反转</span><br><span class="line">    jb就等于jc，如果有标志位就跳转</span><br><span class="line">    ja就等于jnc，没有标志位就不跳转</span><br><span class="line"></span><br><span class="line">    关于zf，就是0标志，结果为零就设置</span><br><span class="line">    jz和je，jnz和jne是等价的</span><br><span class="line"></span><br><span class="line">    注意mov指令不会影响任何一个标志位</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">    mov ah, 4Ch</span><br><span class="line">    int 21h</span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">stk segment stack</span><br><span class="line">comment #</span><br><span class="line">堆栈段与普通段的不同之处</span><br><span class="line">    1. 后面跟着一个关键字stack的意思是这个段是堆栈段</span><br><span class="line">    2. 堆栈段内的数组一般不会用mov等方法来操作，所以里面的名字一般是匿名（与code段中的内容不同）</span><br><span class="line">        后面起了名字也可以，但一般不用它，这个无名数组的用途是规定堆栈段的大小</span><br><span class="line">    3. 堆栈总是先写再读，所以初始值是什么没有影响</span><br><span class="line">        至于为什么要设置为&#39;S&#39;，没有什么用，只是为了等一下调试的时候清楚的看到我来到了堆栈</span><br><span class="line">        碰到很多个零却很不容易看出这是堆栈</span><br><span class="line">    4. 堆栈段的位置没有什么要求，前后中间都可以，只要加了stack关键字就行</span><br><span class="line">    5. 其实，就算程序没有写这个stack segment 程序也需要堆栈，也就是操作系统会自动生成一个堆栈</span><br><span class="line">        现在问题是，如果没写，系统会如何生成？：</span><br><span class="line">        dos会把第一个段的段地址赋值给ss，并且把sp赋值为0</span><br><span class="line">        dos是一个单任务系统，一个程序独占所有的内存，所以从第一个段的末尾开始的内存都是可以用的</span><br><span class="line">    6. 但是assume中的ss:stk可以删除，因为只有当在程序中直接用到了堆栈段的变量才会出现对这句assume的需求</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">; 我觉得除了我，还有人对stack那一片的内容做过了修改，检查该文件的汇编就会发现并不是所有的stack都是初始值&#39;s&#39;</span><br><span class="line">db 200h dup(&#39;S&#39;); 或写成dw 100h dup(0)</span><br><span class="line">stk ends</span><br><span class="line">;堆栈空间是stk:0到stk:1FF</span><br><span class="line">;程序开始运行时,ss&#x3D;stk,sp&#x3D;1FF+1</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/01/14/Assembly/image-20200113134456541.png" alt="image-20200113134456541"></p>
+<p><img src="/2020/01/14/Assembly/image-20200113134512218.png" alt="image-20200113134512218"></p>
+<p><img src="/2020/01/14/Assembly/image-20200113134533924.png" alt="image-20200113134533924"></p>
+<p>关于<code>push</code>和<code>pop</code>只能使用16位与32位的解释：</p>
+<ul>
+<li><p>在普通的16位程序中，只能使用16位作为堆栈的单位</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">;这两句可以正常执行，且masm没有warnings</span><br><span class="line">push ax</span><br><span class="line">pop ax</span><br><span class="line">;这两句masm会给一个operand type not match的warning，但是它不会拒绝给你编译</span><br><span class="line">;编译完成后，在td查看结果，发现这俩变成了push ax和pop ax</span><br><span class="line">push eax</span><br><span class="line">pop eax</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在用了<code>.386</code>这一行的程序中，既可以用16位也可以用32位作为<code>push``pop</code>的单位</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">;这四行都能被正确解读，正确编译，没有Warning Errors</span><br><span class="line">;并且在TD调试过程中观察堆栈变化，可以发现前两行操作的时候sp&#x2F;esp进行的是sub 2的操作</span><br><span class="line">;后两行进行的是sub 4的操作</span><br><span class="line">push ax</span><br><span class="line">pop ax</span><br><span class="line">push eax</span><br><span class="line">pop eax</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="es"><a href="#es" class="headerlink" title="es"></a><code>es</code></h3><p><strong><code>es</code>的部分内容也写在了上面程序中的注释里</strong></p>
+<p><code>es: extra segment</code>附加段，它跟<code>ds</code>类似，可以用来表示一个数据段的段址。例如: <a href="http://10.71.45.100/bhh/2seg.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/2seg.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">data1 segment</span><br><span class="line">abc db 1,2,3</span><br><span class="line">data1 ends</span><br><span class="line"></span><br><span class="line">data2 segment</span><br><span class="line">xyz db 4,5,6</span><br><span class="line">data2 ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data1, es:data2</span><br><span class="line">main:</span><br><span class="line">   mov ax, data1</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov ax, data2</span><br><span class="line">   mov es, ax</span><br><span class="line">   mov ah, abc[1]; 编译后变成mov ah, ds:[1]</span><br><span class="line">   ;也可以写成mov ah, ds:abc[1]</span><br><span class="line">   mov xyz[1], ah; 编译后变成mov es:[1], ah</span><br><span class="line">   ;也可以写成mov es:xyz[1], ah</span><br><span class="line">   ;错误写法:mov abc[1], xyz[1]; 因两个对象不能都为内存变量</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h3 id="FL标志寄存器"><a href="#FL标志寄存器" class="headerlink" title="FL标志寄存器"></a><code>FL</code>标志寄存器</h3><p>FL共16位, 但只用其中9位，这9位包括6个状态标志和3个控制标志，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">11	10	9	8	7	6	4	2	0</span><br><span class="line">O	D	I	T	S	Z	A	P	C</span><br></pre></td></tr></table></figure>
+
+<p>11 10 9  8  7 6  4  2  0</p>
+<p>O  D  I T  S Z  A  P  C</p>
+<table>
+<thead>
+<tr>
+<th align="center">×</th>
+<th align="center">×</th>
+<th align="center">×</th>
+<th align="center">×</th>
+<th align="center">OF</th>
+<th align="center">DF</th>
+<th align="center">IF</th>
+<th align="center">TF</th>
+<th align="center">SF</th>
+<th align="center">ZF</th>
+<th align="center">×</th>
+<th align="center">AF</th>
+<th align="center">×</th>
+<th align="center">PF</th>
+<th align="center">×</th>
+<th align="center">CF</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">0</td>
+<td align="center"></td>
+<td align="center">0</td>
+<td align="center"></td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">15</td>
+<td align="center">14</td>
+<td align="center"></td>
+<td align="center">12</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">9</td>
+<td align="center">8</td>
+<td align="center">7</td>
+<td align="center">6</td>
+<td align="center">5</td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center"></td>
+<td align="center">0</td>
+</tr>
+</tbody></table>
+<h4 id="CF-进位标志-carry-flag"><a href="#CF-进位标志-carry-flag" class="headerlink" title="CF: 进位标志(carry flag)"></a><code>CF</code>: 进位标志(<code>carry flag</code>)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov ah, 0FFh</span><br><span class="line">add ah, 1; AH&#x3D;0, CF&#x3D;1产生了进位</span><br><span class="line">add ah, 2; AH&#x3D;2, CF&#x3D;0</span><br><span class="line">sub ah, 3; AH&#x3D;0FFh, CF&#x3D;1产生了借位</span><br></pre></td></tr></table></figure>
+
+<p>与<code>CF</code>相关的两条跳转指令: <code>jc, jnc</code></p>
+<h4 id="ZF-零标志-zero-flag"><a href="#ZF-零标志-zero-flag" class="headerlink" title="ZF: 零标志(zero flag)"></a><code>ZF</code>: 零标志(<code>zero flag</code>)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sub ax, ax; AX&#x3D;0, ZF&#x3D;1</span><br><span class="line">add ax, 1; AX&#x3D;1, ZF&#x3D;0</span><br><span class="line">add ax, 0FFFFh; AX&#x3D;0, ZF&#x3D;1, CF&#x3D;1</span><br><span class="line">jz is_zero; 会发生跳转, 因为当前ZF&#x3D;&#x3D;1</span><br></pre></td></tr></table></figure>
+
+<p>与<code>jz</code>相反的指令是<code>jnz</code>, <code>jnz</code>是根据<code>ZF==0</code>作出跳转</p>
+<p><strong>注意:<code>mov</code>指令不影响任何标志位, 例如:</strong>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mov ax, 1234h					mov ax, 1234h</span><br><span class="line">mov bx, 1234h					mov bx, 1234h</span><br><span class="line">sub ax, bx						sub ax, bx</span><br><span class="line">mov bx, 1;此mov不影</span><br><span class="line">                                jz iszero</span><br><span class="line">         ;响sub指令</span><br><span class="line">         ;产生的ZF状态</span><br><span class="line">jz iszero             			mov bx, 0</span><br><span class="line">                                jmp done; 与左边相比</span><br><span class="line">; 这里多出一条</span><br><span class="line">; jmp指令</span><br><span class="line">mov bx, 0      					iszero:    ; 故左边写法更好</span><br><span class="line">iszero:              			mov bx, 1</span><br><span class="line">                                 done:</span><br></pre></td></tr></table></figure>
+
+<p>与<code>ZF</code>相关的跳转指令除了<code>jz</code>, <code>jnz</code>还有<code>je</code>, <code>jne</code></p>
+<p>其实<code>je≡jz, jne≡jnz</code></p>
+<p>设<code>ax=1234h, bx=1234h</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cmp ax, bx; ZF&#x3D;1, 因为cmp指令内部做了减法会</span><br><span class="line">; 影响ZF的状态</span><br><span class="line">je is_equal; 写成jz is_equal效果一样</span><br></pre></td></tr></table></figure>
+
+<h4 id="SF-符号标志-sign-flag"><a href="#SF-符号标志-sign-flag" class="headerlink" title="SF: 符号标志(sign flag)"></a><code>SF</code>: 符号标志(<code>sign flag</code>)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov ah, 7Fh</span><br><span class="line">add ah, 1; AH&#x3D;80h&#x3D;1000 0000B, SF&#x3D;1</span><br><span class="line">sub ah, 1; AH&#x3D;7Fh&#x3D;0111 1111B, SF&#x3D;0</span><br><span class="line">jns positive; 会发生跳转, 因为SF&#x3D;&#x3D;0</span><br></pre></td></tr></table></figure>
+
+<p>与<code>jns</code>相反的指令为<code>js</code>, <code>js</code>是根据<code>SF==1</code>作出跳转</p>
+<h4 id="OF-溢出标志-overflow-flag"><a href="#OF-溢出标志-overflow-flag" class="headerlink" title="OF: 溢出标志(overflow flag)"></a><code>OF</code>: 溢出标志(<code>overflow flag</code>)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mov ah, 7Fh</span><br><span class="line">add ah, 1; AH&#x3D;80h, OF&#x3D;1, ZF&#x3D;0, CF&#x3D;0, SF&#x3D;1</span><br><span class="line">mov ah,  80h</span><br><span class="line">add ah, 0FFh; AH&#x3D;7Fh, OF&#x3D;1, ZF&#x3D;0, CF&#x3D;1, SF&#x3D;0</span><br><span class="line">mov ah, 80h</span><br><span class="line">sub ah, 1; AH&#x3D;7Fh, OF&#x3D;1, ZF&#x3D;0, CF&#x3D;0, SF&#x3D;0</span><br></pre></td></tr></table></figure>
+
+<p><code>OF</code>也有两条相关的指令:<code>jo, jno</code></p>
+<p>正负相加永远不会溢出。</p>
+<p>对于减法，可以当作加法考虑。</p>
+<p>其实对于非符号数，也有溢出的概念。我们应该通过<code>cf</code>标志位来判断。</p>
+<h4 id="PF-Parity-Flag-奇偶标志和AF辅助进位标志"><a href="#PF-Parity-Flag-奇偶标志和AF辅助进位标志" class="headerlink" title="PF(Parity Flag)奇偶标志和AF辅助进位标志"></a><code>PF</code>(Parity Flag)奇偶标志和AF辅助进位标志</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov ah, 4</span><br><span class="line">add ah, 1; AH&#x3D;0000 0101B, PF&#x3D;1表示有偶数个1</span><br><span class="line">mov ax, 0101h</span><br><span class="line">add ax, 0004h; AX&#x3D;0105h&#x3D;0000 0001 0000 0101B</span><br><span class="line">        ; PF&#x3D;1只统计低8位中1的个数</span><br></pre></td></tr></table></figure>
+
+<p>要是低8位中1的个数是奇数时，<code>PF=0</code></p>
+<p>PF有两条相关指令: </p>
+<p><code>jp</code>(当PF==1时则跳), <code>jnp</code>(当PF==0时则跳)</p>
+<p>其中<code>jp</code>也可以写成<code>jpe</code>(jump if parity even), </p>
+<p><code>jnp</code>也可以写成<code>jpo</code>(jump if parity odd)</p>
+<p><code>pf</code>是一个奇偶校验位。</p>
+<p>存在的意义在于直接进行检验。</p>
+<p><strong>今天的typora怎么莫名奇妙的卡顿?嗯哼?</strong></p>
+<p>以前利用串口通讯的时候会很容易出错，传输速度又很慢，所以要进行奇偶校验。</p>
+<h4 id="AF-Auxiliary-Flag-辅助进位标志"><a href="#AF-Auxiliary-Flag-辅助进位标志" class="headerlink" title="AF(Auxiliary Flag) 辅助进位标志"></a><code>AF</code>(Auxiliary Flag) 辅助进位标志</h4><p>低4位向高4位产生进位或借位</p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov ah, 1Fh;  0001 1111</span><br><span class="line"></span><br><span class="line">add ah, 1  ;  0000 0001 +)</span><br><span class="line"></span><br><span class="line">        ; ah&#x3D;20h, AF&#x3D;1</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>AF</code>跟<code>BCD</code>(Binary Coded Decimal)码有关。</p>
+<p>11h 表示 11</p>
+<p>59h 表示 59</p>
+<p><code>BCD</code>的优点是便于用以下方法快速分离出十位和个位:</p>
+<p>59h &gt;&gt; 4 -&gt; 5</p>
+<p>59h &amp; 0Fh -&gt; 9</p>
+<p><code>BCD</code>码在加法时需要做调整:</p>
+<p>59h + 8 = 61h; AF=1, 需要调整</p>
+<p>需要对上述结果作调整, 方法是对上述结果加6, 得67h</p>
+<p>59h + 2 = 5Bh ; 虽然<code>AF=0</code>, 但个位超过<code>A</code>, 所以也需要</p>
+<p>​          ; 通过加<code>6</code>作调整, 得<code>61h</code></p>
+<p>59h + 0 = 59h ; <code>AF=0</code>, 且个位所以不需要调整</p>
+<p>AF没有相关的条件跳转指令。</p>
+<p>各位加上各位数字。我tm怎么就这么卡???</p>
+<p>让我看看，怎么还是挺卡的，hhh，但是好一点了，啧啧啧。</p>
+<p><code>CF ZF SF OF AF PF: 这6个称为状态标志</code></p>
+<p><code>DF TF IF: 这3个称为控制标志</code></p>
+<p><code>DF:direction flag</code></p>
+<p><code>TF:trace/trap flag</code></p>
+<p><code>IF:interrupt flag</code></p>
+<h4 id="DF（Direction-Flag）方向标志-控制字符串的操作方向。"><a href="#DF（Direction-Flag）方向标志-控制字符串的操作方向。" class="headerlink" title="DF（Direction Flag）方向标志: 控制字符串的操作方向。"></a><code>DF</code>（Direction Flag）方向标志: 控制字符串的操作方向。</h4><p>当DF=0时为正方向(低地址到高地址)，当DF=1是反方向。</p>
+<p>cld指令使DF=0， std指令使DF=1</p>
+<p>若源数据首地址&gt;目标数据首地址，则复制时要按正方向</p>
+<p>(从低地址到高地址)；</p>
+<p>若源数据首地址&lt;目标数据首地址，则复制时要按反方向</p>
+<p>(从高地址到低地址)；</p>
+<p><code>strcpy(target, source); 永远按正方向复制</code></p>
+<p><code>memcpy(target, source, n);永远按正方向复制</code></p>
+<p><code>memmove(target, source, n); 能正确处理部分重叠</code></p>
+<p>有2条指令可以设置DF的值: </p>
+<p>cld使DF=0, 字符串复制按正方向</p>
+<p>std使DF=1, 字符串复制按反方向</p>
+<p>若源首地址&lt;目标首地址，则复制按反方向。</p>
+<table>
+<thead>
+<tr>
+<th>1000           1001   1002   1003   1004</th>
+<th>‘A’</th>
+<th>1002   1003   1004   1005   1006</th>
+<th>‘A’</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>‘B’</td>
+<td>‘B’</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>‘C’A</td>
+<td>‘C’</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>‘D’B</td>
+<td>‘D’</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>‘E’C</td>
+<td>‘E’</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>当源首地址&gt;目标首地址时，复制时按正方向</p>
+<table>
+<thead>
+<tr>
+<th>1002           1003   1004   1005   1006</th>
+<th>‘A’C</th>
+<th>1000   1001   1002   1003   1004</th>
+<th>‘A’</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>‘B’D</td>
+<td>‘B’</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>‘C’E</td>
+<td>‘C’</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>‘D’</td>
+<td>‘D’</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>‘E’</td>
+<td>‘E’</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="IF（Interrupt-Flag）中断标志"><a href="#IF（Interrupt-Flag）中断标志" class="headerlink" title="IF（Interrupt Flag）中断标志"></a><code>IF</code>（Interrupt Flag）中断标志</h4><p>当IF=1时,允许中断;否则禁止中断。cli指令使IF=0表示关/禁止硬件中断;</p>
+<p>sti指令使IF=1表示开/允许硬件中断。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mov ax, 0</span><br><span class="line">mov bx, 1</span><br><span class="line">next:</span><br><span class="line">add ax, bx</span><br><span class="line">;此时若用户敲键,则CPU会在此处插入一条int 9h指令并执行它</span><br><span class="line">;int 9h的功能是读键盘编码并保存到键盘缓冲区中</span><br><span class="line">add bx, 1</span><br><span class="line">cmp bx, 100</span><br><span class="line">;若程序已运行了1&#x2F;18秒,则cpu会在此处插入一条int 8h指令</span><br><span class="line">jbe next</span><br></pre></td></tr></table></figure>
+
+
+
+<p>用cli和sti把一段代码包围起来可以达到该段代码在</p>
+<p>执行过程中不会被打断的效果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cli; clear interrupt禁止硬件中断</span><br><span class="line">...; 重要代码</span><br><span class="line">sti; set interrupt允许硬件中断</span><br></pre></td></tr></table></figure>
+
+<h4 id="TF（Trace-Trap-Flag）跟踪-陷阱标志"><a href="#TF（Trace-Trap-Flag）跟踪-陷阱标志" class="headerlink" title="TF（Trace/Trap  Flag）跟踪/陷阱标志"></a><code>TF</code>（Trace/Trap  Flag）跟踪/陷阱标志</h4><p>当TF=1时,CPU会进入单步模式(single-step mode)。</p>
+<p>当TF=1时,CPU在每执行完一条指令后,会自动在该条指令与下条指令之间插入一条int 1h指令并执行它。</p>
+<p>利用单步模式可以实现反调试:</p>
+<p>进入单步模式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nop</span><br><span class="line">;int 1</span><br><span class="line">xxx-&gt;mov</span><br><span class="line">;int 1</span><br><span class="line">yyy-&gt;add</span><br><span class="line">;int 1</span><br><span class="line">zzz-&gt;cmp</span><br></pre></td></tr></table></figure>
+
+<h3 id="MUL-IMUL-DIV-IDIV以及INC-DEC对于FL寄存器的影响"><a href="#MUL-IMUL-DIV-IDIV以及INC-DEC对于FL寄存器的影响" class="headerlink" title="MUL, IMUL, DIV, IDIV以及INC, DEC对于FL寄存器的影响"></a>MUL, IMUL, DIV, IDIV以及INC, DEC对于FL寄存器的影响</h3><p>通过实验来检验各种操作对于FLAGS寄存器的改变</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov eax, 0f000h</span><br><span class="line">mov ebx, 0f000h</span><br><span class="line">imul eax, ebx</span><br><span class="line">;最终结果虽然可以存储到eax中，CF和OF还是被置为1</span><br><span class="line">;这几条指令只能在.386下使用</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">assume cs:code, es:data</span><br><span class="line">data segment</span><br><span class="line">a db &quot;ABC&quot;</span><br><span class="line">s db &quot;Hello$world!&quot;, 0Dh, 0Ah, 0</span><br><span class="line">to_inc db 7fh, 7fh</span><br><span class="line">adw dd 12345678h</span><br><span class="line">andw dd 87654321h</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">main:</span><br><span class="line">;段地址不能以常数形式赋值</span><br><span class="line">    mov ax, data</span><br><span class="line">    mov es, ax</span><br><span class="line">    mov al, 0ffh</span><br><span class="line">    inc al</span><br><span class="line">    ; inc 会影响除了CF意外的标志位</span><br><span class="line">    ; 但是PF，parity flag只会检测运算结果的低八位</span><br><span class="line">    mov al, 7fh</span><br><span class="line">    inc al</span><br><span class="line">    mov ax, 0ffffh</span><br><span class="line">    inc ax</span><br><span class="line">    mov ax, 7fffh</span><br><span class="line">    inc ax</span><br><span class="line">    mov ax, 0h</span><br><span class="line">    and ax, ax</span><br><span class="line">    ; and or 这样的运算会将Carry Flag和Overflow Flag清零，即使CF xor MSB &#x3D; 1</span><br><span class="line">    ; 其他的FLAG位该怎么样就怎么样</span><br><span class="line">    mov ax, 0080h</span><br><span class="line">    or ax, ax</span><br><span class="line">    mov ax, 8000h</span><br><span class="line">    or ax, ax</span><br><span class="line">    ; 对于MEMORY中的变量也可以直接使用inc或者dec</span><br><span class="line">    ; 同样的CF不会被影响</span><br><span class="line">    mov byte ptr to_inc, 7fh</span><br><span class="line">    inc to_inc</span><br><span class="line">    mov word ptr to_inc, 7fffh</span><br><span class="line">    inc word ptr to_inc</span><br><span class="line">    mov word ptr to_inc, 0ffffh</span><br><span class="line">    inc word ptr to_inc</span><br><span class="line">    mov al, 4</span><br><span class="line">    mov bh, 4</span><br><span class="line">    ; mul和imul指令的“结果”指的是低半位的结果</span><br><span class="line">    ; 例如在8位*8位下乘法的结果超过了最低8位的储存限制，CF和OF就会被置为1</span><br><span class="line">    ; 但这条指令似乎并没有区分CF与OF而是一网打尽</span><br><span class="line">    mul bh</span><br><span class="line">    imul bh</span><br><span class="line">    mov al, 7fh</span><br><span class="line">    mov bh, 80h</span><br><span class="line">    mul bh</span><br><span class="line">    mov al, 7fh</span><br><span class="line">    imul bh</span><br><span class="line">    mov al, 01h</span><br><span class="line">    mov bh, 80h</span><br><span class="line">    mul bh</span><br><span class="line">    mov al, 01h</span><br><span class="line">    imul bh</span><br><span class="line"></span><br><span class="line">    mov dx, 1</span><br><span class="line">    mov ax, 0100h</span><br><span class="line">    mov bx, 16</span><br><span class="line">    ; 除法似乎不会影响FLAGS寄存器</span><br><span class="line">    div bx</span><br><span class="line">    mov ax, es:a</span><br><span class="line">    mov bx, 0</span><br><span class="line">next:</span><br><span class="line">    mov dl, es:[s+bx]; 经过编译后变成mov dl, ds:[3+bx]</span><br><span class="line">    cmp dl, 0</span><br><span class="line">    je exit</span><br><span class="line">    mov ah, 2</span><br><span class="line">    int 21h</span><br><span class="line">    add bx, 1</span><br><span class="line">    jmp next</span><br><span class="line">exit:</span><br><span class="line">    mov ah, 4Ch</span><br><span class="line">    int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h2 id="对内存变量的访问可以使用两种方式"><a href="#对内存变量的访问可以使用两种方式" class="headerlink" title="对内存变量的访问可以使用两种方式"></a>对内存变量的访问可以使用两种方式</h2><h3 id="直接寻址"><a href="#直接寻址" class="headerlink" title="直接寻址"></a>直接寻址</h3><p>设某个8位变量的地址为1000h:2000h，现要取出它的值到AL中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov ax, 1000h</span><br><span class="line">mov ds, ax</span><br><span class="line">mov al, ds:[2000h]; 这个就是直接寻址</span><br></pre></td></tr></table></figure>
+
+<h3 id="间接寻址"><a href="#间接寻址" class="headerlink" title="间接寻址"></a>间接寻址</h3><p>①<code>[bx]  [bp]  [si]  [di]</code>就成了最简单的间接寻址方式</p>
+<p><code>[ax]  [cx]  [dx]  [sp]</code>语法错误</p>
+<p>②<code>[bx+si] [bx+di] [bp+si] [bp+di]</code></p>
+<p>注意<code>[bx+bp]</code>以及<code>[si+di]</code>是错误的。</p>
+<p>③<code>[bx+2] [bp-2] [si+1] [di-1]</code></p>
+<p>④<code>[bx+si+2] [bx+di-2] [bp+si+1]  [bp+di-1]</code></p>
+<p>两个寄存器相加的间接寻址方式中, bx或bp通常用来表示数组的首地址, 而si或di则用来表示下标。</p>
+<p>例如: <a href="http://10.71.45.100/bhh/arydemo.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/arydemo.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">abc db 1,2,3,4</span><br><span class="line">xyz db 5,6,7,8</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov si, 0</span><br><span class="line">   mov cx, 4</span><br><span class="line">next:</span><br><span class="line">   add abc[si], 1; 编译后变成add byte ptr [si+0],1</span><br><span class="line">   add si, 1; 这里的si就是下标</span><br><span class="line">   sub cx, 1</span><br><span class="line">   jnz next</span><br><span class="line">   mov bx, offset xyz</span><br><span class="line">   mov si, 0</span><br><span class="line">   mov cx, 4</span><br><span class="line">again:</span><br><span class="line">   add byte ptr [bx+si], 1; 这里bx是数组首地址,si是下标</span><br><span class="line">   add si, 1</span><br><span class="line">   sub cx, 1</span><br><span class="line">   jnz again</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+
+
+<p>两个寄存器相加再加一个常数的间接寻址通常用来访问结构数组中某个元素中的某个成员, 例如:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">student</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">   <span class="keyword">char</span> name[<span class="number">8</span>];</span><br><span class="line">   short <span class="keyword">int</span> score;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">student</span> <span class="title">a</span>[10];</span></span><br><span class="line">ax = a[<span class="number">3</span>].score;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>设bx=&amp;a[0], si=30, 则ax=a[3].score可转化成以下汇编代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov ax, [bx+si+8]; &#x2F;\* bx+si-&gt;[3] \*&#x2F;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h2><p>CPU &lt;-&gt; 端口(port) &lt;-&gt; I/O设备</p>
+<p>端口编号就是端口地址。端口地址的范围是：</p>
+<p>[0000h, 0FFFFh]，共65536个端口。</p>
+<p>对端口操作使用指令in与out实现。</p>
+<h3 id="键盘通讯（60h号端口）"><a href="#键盘通讯（60h号端口）" class="headerlink" title="键盘通讯（60h号端口）"></a>键盘通讯（60h号端口）</h3><p>通过60h号端口，CPU与键盘之间可以建立通讯。</p>
+<p>in al, 60h; 从端口60h读取一个字节并存放到AL中</p>
+<p>例如: <a href="http://10.71.45.100/bhh/key.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/key.asm</a></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line">;---------------------------------------</span><br><span class="line">;PrtSc&#x2F;SysRq: E0 2A E0 37 E0 B7 E0 AA  ;</span><br><span class="line">;Pause&#x2F;Break: E1 1D 45 E1 9D C5        ;</span><br><span class="line">;---------------------------------------</span><br><span class="line">data segment</span><br><span class="line">old_9h dw 0, 0</span><br><span class="line">stop   db 0</span><br><span class="line">key    db 0; key&#x3D;31h</span><br><span class="line">phead  dw 0</span><br><span class="line">key_extend  db &#39;KeyExtend&#x3D;&#39;, 0</span><br><span class="line">key_up      db &#39;KeyUp&#x3D;&#39;, 0</span><br><span class="line">key_down    db &#39;KeyDown&#x3D;&#39;, 0</span><br><span class="line">key_code    db &#39;00h &#39;, 0</span><br><span class="line">hex_tbl     db &#39;0123456789ABCDEF&#39;</span><br><span class="line">cr          db  0Dh, 0Ah, 0</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   xor ax, ax</span><br><span class="line">   mov es, ax</span><br><span class="line">   mov bx, 9*4</span><br><span class="line">   push es:[bx]</span><br><span class="line">   pop old_9h[0]</span><br><span class="line">   push es:[bx+2]</span><br><span class="line">   pop old_9h[2]    ; 保存int 9h的中断向量</span><br><span class="line">   cli</span><br><span class="line">   mov word ptr es:[bx], offset int_9h</span><br><span class="line">   mov es:[bx+2], cs; 修改int 9h的中断向量</span><br><span class="line">   sti</span><br><span class="line">again:</span><br><span class="line">   cmp [stop], 1</span><br><span class="line">   jne again        ; 主程序在此循环等待</span><br><span class="line">   push old_9h[0]</span><br><span class="line">   pop es:[bx]</span><br><span class="line">   push old_9h[2]</span><br><span class="line">   pop es:[bx+2]    ; 恢复int 9h的中断向量</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line"></span><br><span class="line">int_9h:</span><br><span class="line">   push ax</span><br><span class="line">   push bx</span><br><span class="line">   push cx</span><br><span class="line">   push ds</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax       ; 这里设置DS是因为被中断的不一定是我们自己的程序</span><br><span class="line">   in al, 60h       ; AL&#x3D;key code</span><br><span class="line">   mov [key], al</span><br><span class="line">   cmp al, 0E0h</span><br><span class="line">   je  extend</span><br><span class="line">   cmp al, 0E1h</span><br><span class="line">   jne up_or_down</span><br><span class="line">extend:</span><br><span class="line">   mov [phead], offset key_extend</span><br><span class="line">   call output</span><br><span class="line">   jmp check_esc</span><br><span class="line">up_or_down:</span><br><span class="line">   test al, 80h     ; 最高位&#x3D;&#x3D;1时表示key up</span><br><span class="line">   jz down</span><br><span class="line">up:</span><br><span class="line">   mov [phead], offset key_up</span><br><span class="line">   call output</span><br><span class="line">   mov bx, offset cr</span><br><span class="line">   call display     ; 输出回车换行</span><br><span class="line">   jmp check_esc</span><br><span class="line">down:</span><br><span class="line">   mov [phead], offset key_down</span><br><span class="line">   call output</span><br><span class="line">check_esc:   </span><br><span class="line">   cmp [key], 81h   ; Esc键的key up码</span><br><span class="line">   jne int_9h_iret</span><br><span class="line">   mov [stop], 1</span><br><span class="line">int_9h_iret:</span><br><span class="line">   mov al, 20h      ; 发EOI(End Of Interrupt)信号给中断控制器，</span><br><span class="line">   out 20h, al      ; 表示我们已处理当前的硬件中断(硬件中断处理最后都要这2条指令)。</span><br><span class="line">                    ; 因为我们没有跳转到的old_9h，所以必须自己发EOI信号。</span><br><span class="line">                    ; 如果跳到old_9h的话，则old_9h里面有这2条指令，这里就不要写。</span><br><span class="line">   pop ds</span><br><span class="line">   pop cx</span><br><span class="line">   pop bx</span><br><span class="line">   pop ax</span><br><span class="line">   iret             ; 中断返回指令。从堆栈中逐个弹出IP、CS、FL。</span><br><span class="line"></span><br><span class="line">output:</span><br><span class="line">   push ax</span><br><span class="line">   push bx</span><br><span class="line">   push cx</span><br><span class="line">   mov bx, offset hex_tbl</span><br><span class="line">   mov cl, 4</span><br><span class="line">   push ax   ; 设AL&#x3D;31h&#x3D;0011 0001</span><br><span class="line">   shr al, cl; AL&#x3D;03h</span><br><span class="line">   xlat      ; AL &#x3D; DS:[BX+AL] &#x3D; &#39;3&#39;</span><br><span class="line">   mov key_code[0], al</span><br><span class="line">   pop ax</span><br><span class="line">   and al, 0Fh; AL&#x3D;01h</span><br><span class="line">   xlat       ; AL&#x3D;&#39;1&#39;</span><br><span class="line">   mov key_code[1], al</span><br><span class="line">   mov bx, [phead]</span><br><span class="line">   call display     ; 输出提示信息</span><br><span class="line">   mov bx, offset key_code</span><br><span class="line">   call display     ; 输出键码</span><br><span class="line">   pop cx</span><br><span class="line">   pop bx</span><br><span class="line">   pop ax</span><br><span class="line">   ret</span><br><span class="line">   </span><br><span class="line">display:</span><br><span class="line">   push ax</span><br><span class="line">   push bx</span><br><span class="line">   push si</span><br><span class="line">   mov si, bx</span><br><span class="line">   mov bx, 0007h    ; BL &#x3D; color</span><br><span class="line">   cld</span><br><span class="line">display_next:</span><br><span class="line">   mov ah, 0Eh      ; AH&#x3D;0Eh, BIOS int 10h的子功能，具体请查中断大全</span><br><span class="line">   lodsb</span><br><span class="line">   or al, al</span><br><span class="line">   jz display_done</span><br><span class="line">   int 10h          ; 每次输出一个字符</span><br><span class="line">   jmp display_next</span><br><span class="line">display_done:</span><br><span class="line">   pop si</span><br><span class="line">   pop bx</span><br><span class="line">   pop ax</span><br><span class="line">   ret</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h3 id="时钟通讯（70h、71h端口通讯）"><a href="#时钟通讯（70h、71h端口通讯）" class="headerlink" title="时钟通讯（70h、71h端口通讯）"></a>时钟通讯（70h、71h端口通讯）</h3><p>70h及71h端口与cmos内部的时钟有关。</p>
+<p>其中cmos中的地址4、2、0中分别保存了当前的时、分、秒，并且格式均为BCD码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mov al, 2</span><br><span class="line">out 70h, al</span><br><span class="line">in al, 71h; 读取cmos中2号单元的值</span><br><span class="line">mov al, 4</span><br><span class="line">out 70h, al</span><br><span class="line">mov al, 23h</span><br><span class="line">out 71h, al; 把cmos4号单元即小时的值改成23点</span><br></pre></td></tr></table></figure>
+
+<p>例如: <a href="http://10.71.45.100/bhh/readtime.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/readtime.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">current_time db &quot;00:00:00&quot;, 0Dh, 0Ah, &quot;$&quot;</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   mov al, 4</span><br><span class="line">   out 70h,al; index hour</span><br><span class="line">   in al,71h ; AL&#x3D;hour(e.g. 19h means 19 pm.)</span><br><span class="line">   call convert; AL&#x3D;&#39;1&#39;, AH&#x3D;&#39;9&#39;</span><br><span class="line">   ;mov word ptr current_time[0],ax</span><br><span class="line">   mov current_time[0], al</span><br><span class="line">   mov current_time[1], ah</span><br><span class="line">   mov al,2</span><br><span class="line">   out 70h,al; index minute</span><br><span class="line">   in  al,71h; AL&#x3D;minute</span><br><span class="line">   call convert</span><br><span class="line">   mov word ptr current_time[3],ax;</span><br><span class="line">   ;mov current_time[3], al</span><br><span class="line">   ;mov current_time[4], ah</span><br><span class="line">   mov al,0  ; index second</span><br><span class="line">   out 70h,al</span><br><span class="line">   in  al,71h; AL&#x3D;second</span><br><span class="line">   call convert</span><br><span class="line">   mov word ptr current_time[6],ax</span><br><span class="line">   mov ah, 9</span><br><span class="line">   mov dx, offset current_time</span><br><span class="line">   int 21h</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line">;---------Convert----------------</span><br><span class="line">;Input:AL&#x3D;hour or minute or second</span><br><span class="line">;      format:e.g. hour   15h means 3 pm.</span><br><span class="line">;                  second 56h means 56s</span><br><span class="line">;Output: (e.g. AL&#x3D;56h)</span><br><span class="line">;     AL&#x3D;&#39;5&#39;</span><br><span class="line">;     AH&#x3D;&#39;6&#39;</span><br><span class="line">convert:</span><br><span class="line">    push cx</span><br><span class="line">    mov ah,al ; e.g. assume AL&#x3D;56h</span><br><span class="line">    and ah,0Fh; AH&#x3D;06h</span><br><span class="line">    mov cl,4</span><br><span class="line">    shr al,cl ; AL&#x3D;05h</span><br><span class="line">    ; shr:shift right右移</span><br><span class="line">    add ah, &#39;0&#39;; AH&#x3D;&#39;6&#39;</span><br><span class="line">    add al, &#39;0&#39;; AL&#x3D;&#39;5&#39;</span><br><span class="line">    pop  cx</span><br><span class="line">    ret</span><br><span class="line">;---------End of Convert---------</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h3 id="各类通讯间的层次关系"><a href="#各类通讯间的层次关系" class="headerlink" title="各类通讯间的层次关系"></a>各类通讯间的层次关系</h3><p>以读取键盘为例, 以下为从高层到低层的编程方式排序:</p>
+<p>dos        高  <code>mov ah, 1; int 21h 功能弱,但编程简单</code></p>
+<p>bios       中  <code>mov ah, 0; int 16h</code></p>
+<p>in/out     低  <code>in al, 60h; 功能强, 但编程麻烦</code></p>
+<p>因为这种 in out 的方式不需要依赖于任何人写好的代码</p>
+<p>即使是bios级别的读取方式也要依赖于主板生产厂商写好的代码（存储在ROM中）</p>
+<p>而dos级别的当然就需要依赖于写dos系统的人的代码</p>
+<p>例如: <a href="http://10.71.45.100/bhh/music.asm" target="_blank" rel="noopener">http://10.71.45.100/bhh/music.asm</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br></pre></td><td class="code"><pre><span class="line">NOTE_1  &#x3D;  440 ; 音调频率</span><br><span class="line">NOTE_2  &#x3D;  495</span><br><span class="line">NOTE_3  &#x3D;  550</span><br><span class="line">NOTE_4  &#x3D;  587</span><br><span class="line">NOTE_5  &#x3D;  660</span><br><span class="line">NOTE_6  &#x3D;  733</span><br><span class="line">NOTE_7  &#x3D;  825</span><br><span class="line"></span><br><span class="line">ONE_BEEP  &#x3D;  600 ; 一拍延时600ms</span><br><span class="line">HALF_BEEP &#x3D;  300 ; 半拍延时300ms</span><br><span class="line"></span><br><span class="line">data segment</span><br><span class="line">ticks dw 0</span><br><span class="line">music dw  NOTE_5, ONE_BEEP</span><br><span class="line">dw  NOTE_3, HALF_BEEP</span><br><span class="line">dw  NOTE_5, HALF_BEEP</span><br><span class="line">dw  NOTE_1*2, ONE_BEEP*2</span><br><span class="line">dw  NOTE_6, ONE_BEEP</span><br><span class="line">dw  NOTE_1*2, ONE_BEEP</span><br><span class="line">dw  NOTE_5, ONE_BEEP*2</span><br><span class="line">dw  NOTE_5, ONE_BEEP</span><br><span class="line">dw  NOTE_1, HALF_BEEP</span><br><span class="line">dw  NOTE_2, HALF_BEEP</span><br><span class="line">dw  NOTE_3, ONE_BEEP</span><br><span class="line">dw  NOTE_2, HALF_BEEP</span><br><span class="line">dw  NOTE_1, HALF_BEEP</span><br><span class="line">dw  NOTE_2, ONE_BEEP*4</span><br><span class="line">dw  NOTE_5, ONE_BEEP</span><br><span class="line">dw  NOTE_3, HALF_BEEP</span><br><span class="line">dw  NOTE_5, HALF_BEEP</span><br><span class="line">dw  NOTE_1*2, HALF_BEEP*3</span><br><span class="line">dw  NOTE_7, HALF_BEEP</span><br><span class="line">dw  NOTE_6, ONE_BEEP</span><br><span class="line">dw  NOTE_1*2, ONE_BEEP</span><br><span class="line">dw  NOTE_5, ONE_BEEP*2</span><br><span class="line">dw  NOTE_5, ONE_BEEP</span><br><span class="line">dw  NOTE_2, HALF_BEEP</span><br><span class="line">dw  NOTE_3, HALF_BEEP</span><br><span class="line">dw  NOTE_4, HALF_BEEP*3</span><br><span class="line">dw  NOTE_7&#x2F;2, HALF_BEEP</span><br><span class="line">dw  NOTE_1, ONE_BEEP*4</span><br><span class="line">dw  NOTE_6, ONE_BEEP</span><br><span class="line">dw  NOTE_1*2, ONE_BEEP</span><br><span class="line">dw  NOTE_1*2, ONE_BEEP*2</span><br><span class="line">dw  NOTE_7, ONE_BEEP</span><br><span class="line">dw  NOTE_6, HALF_BEEP</span><br><span class="line">dw  NOTE_7, HALF_BEEP</span><br><span class="line">dw  NOTE_1*2, ONE_BEEP*2</span><br><span class="line">dw  NOTE_6, HALF_BEEP</span><br><span class="line">dw  NOTE_7, HALF_BEEP</span><br><span class="line">dw  NOTE_1*2, HALF_BEEP</span><br><span class="line">dw  NOTE_6, HALF_BEEP</span><br><span class="line">dw  NOTE_6, HALF_BEEP</span><br><span class="line">dw  NOTE_5, HALF_BEEP</span><br><span class="line">dw  NOTE_3, HALF_BEEP</span><br><span class="line">dw  NOTE_1, HALF_BEEP</span><br><span class="line">dw  NOTE_2, ONE_BEEP*4</span><br><span class="line">dw  NOTE_5, ONE_BEEP</span><br><span class="line">dw  NOTE_3, HALF_BEEP</span><br><span class="line">dw  NOTE_5, HALF_BEEP</span><br><span class="line">dw  NOTE_1*2, HALF_BEEP*3</span><br><span class="line">dw  NOTE_7, HALF_BEEP</span><br><span class="line">dw  NOTE_6, ONE_BEEP</span><br><span class="line">dw  NOTE_1*2, ONE_BEEP</span><br><span class="line">dw  NOTE_5, ONE_BEEP*2</span><br><span class="line">dw  NOTE_5, ONE_BEEP</span><br><span class="line">dw  NOTE_2, HALF_BEEP</span><br><span class="line">dw  NOTE_3, HALF_BEEP</span><br><span class="line">dw  NOTE_4, HALF_BEEP*3</span><br><span class="line">dw  NOTE_7&#x2F;2, HALF_BEEP</span><br><span class="line">dw  NOTE_1, ONE_BEEP*3</span><br><span class="line">dw  0, 0</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment</span><br><span class="line">assume cs:code, ds:data, ss:stk</span><br><span class="line">main:</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   xor ax, ax</span><br><span class="line">   mov es, ax</span><br><span class="line">   mov bx, 8*4</span><br><span class="line">   mov ax, es:[bx]</span><br><span class="line">   mov dx, es:[bx+2]   ; 取int 8h的中断向量</span><br><span class="line">   mov cs:old_int8h[0], ax</span><br><span class="line">   mov cs:old_int8h[2], dx; 保存int 8h的中断向量</span><br><span class="line">   cli</span><br><span class="line">   mov word ptr es:[bx], offset int_8h</span><br><span class="line">   mov es:[bx+2], cs   ; 修改int 8h的中断向量</span><br><span class="line">   mov al, 36h</span><br><span class="line">   out 43h, al</span><br><span class="line">   mov dx, 0012h</span><br><span class="line">   mov ax, 34DCh       ; DX:AX&#x3D;1193180</span><br><span class="line">   mov cx, 1000</span><br><span class="line">   div cx              ; AX&#x3D;1193180&#x2F;1000</span><br><span class="line">   out 40h, al</span><br><span class="line">   mov al, ah</span><br><span class="line">   out 40h, al         ; 设置时钟振荡频率为1000次&#x2F;秒</span><br><span class="line">   sti</span><br><span class="line">   mov si, offset music</span><br><span class="line">   cld</span><br><span class="line">again:</span><br><span class="line">   lodsw</span><br><span class="line">   test ax, ax</span><br><span class="line">   jz done</span><br><span class="line">   call frequency</span><br><span class="line">   lodsw</span><br><span class="line">   call delay</span><br><span class="line">   jmp again</span><br><span class="line">done:</span><br><span class="line">   cli</span><br><span class="line">   mov ax, cs:old_int8h[0]</span><br><span class="line">   mov dx, cs:old_int8h[2]</span><br><span class="line">   mov es:[bx], ax</span><br><span class="line">   mov es:[bx+2], dx   ; 恢复int 8h的中断向量</span><br><span class="line">   mov al, 36h</span><br><span class="line">   out 43h, al</span><br><span class="line">   mov al, 0</span><br><span class="line">   out 40h, al</span><br><span class="line">   mov al, 0</span><br><span class="line">   out 40h, al         ; 恢复时钟振荡频率为1193180&#x2F;65536&#x3D;18.2次&#x2F;秒</span><br><span class="line">   sti</span><br><span class="line">   mov ah, 4Ch</span><br><span class="line">   int 21h</span><br><span class="line"></span><br><span class="line">frequency:</span><br><span class="line">   push cx</span><br><span class="line">   push dx</span><br><span class="line">   mov cx, ax   ; CX&#x3D;frequency</span><br><span class="line">   mov dx, 0012h</span><br><span class="line">   mov ax, 34DCh; DX:AX&#x3D;1193180</span><br><span class="line">   div cx       ; AX&#x3D;1193180&#x2F;frequency</span><br><span class="line">   pop dx</span><br><span class="line">   pop cx</span><br><span class="line">   cli</span><br><span class="line">   push ax</span><br><span class="line">   mov al, 0B6h</span><br><span class="line">   out 43h, al</span><br><span class="line">   pop ax</span><br><span class="line">   out 42h, al ; n的低8位</span><br><span class="line">   mov al, ah</span><br><span class="line">   out 42h, al ; n的高8位 </span><br><span class="line">               ; 每隔n个tick产生一次振荡</span><br><span class="line">               ; 振荡频率&#x3D;1193180&#x2F;n (次&#x2F;秒)</span><br><span class="line">   sti</span><br><span class="line">   ret</span><br><span class="line"></span><br><span class="line">delay:</span><br><span class="line">   push ax</span><br><span class="line">   cli</span><br><span class="line">   in al, 61h</span><br><span class="line">   or al, 3</span><br><span class="line">   out 61h, al; 开喇叭</span><br><span class="line">   sti</span><br><span class="line">   pop ax</span><br><span class="line">   mov [ticks], ax</span><br><span class="line">wait_this_delay:</span><br><span class="line">   cmp [ticks], 0</span><br><span class="line">   jne wait_this_delay</span><br><span class="line">   cli</span><br><span class="line">   in al, 61h</span><br><span class="line">   and al, not 3</span><br><span class="line">   out 61h, al; 关喇叭</span><br><span class="line">   sti</span><br><span class="line">   ret</span><br><span class="line"></span><br><span class="line">int_8h:</span><br><span class="line">   push ax</span><br><span class="line">   push ds</span><br><span class="line">   mov ax, data</span><br><span class="line">   mov ds, ax</span><br><span class="line">   cmp [tcks], 0</span><br><span class="line">   je skip</span><br><span class="line">   dec [ticks]</span><br><span class="line">skip:</span><br><span class="line">   pop ds</span><br><span class="line">   pop ax</span><br><span class="line">   jmp dword ptr cs:[old_int8h]</span><br><span class="line">old_int8h dw 0, 0</span><br><span class="line">code ends</span><br><span class="line"></span><br><span class="line">stk segment stack</span><br><span class="line">dw 100h dup(0)</span><br><span class="line">stk ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h2 id="XLAT查表指令"><a href="#XLAT查表指令" class="headerlink" title="XLAT查表指令"></a>XLAT查表指令</h2><p>在<code>xlat</code>执行前必须让<code>ds:bx</code>指向表, <code>al</code>必须赋值为数组的下标; 执行<code>xlat</code>后, <code>AL=ds:[bx+AL]</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> t[]=<span class="string">"0123456789ABCDEF"</span>;</span><br><span class="line"><span class="keyword">char</span> i;</span><br><span class="line">i = <span class="number">10</span>;</span><br><span class="line">i = t[i]; 最后i=<span class="string">'A'</span></span><br></pre></td></tr></table></figure>
+
+<p>设<code>ds</code>=数组t的段地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov bx, offset t; BX&#x3D;表的首地址</span><br><span class="line">mov al, 10; AL为下标</span><br><span class="line">xlat; 结果AL&#x3D;&#39;A&#39;</span><br></pre></td></tr></table></figure>
+
+<p><code>xlat</code>指令要求<code>DS:BX</code>指向数组，<code>AL</code>=数组下标。</p>
+<p>执行指令后, <code>AL</code>=数组元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">.386 ; 表示程序中会用32位的寄存器</span><br><span class="line">data segment use16; use16表示偏移使用16位</span><br><span class="line">t db &quot;0123456789ABCDEF&quot;</span><br><span class="line">x dd 2147483647</span><br><span class="line">data ends</span><br><span class="line"></span><br><span class="line">code segment use16</span><br><span class="line">assume cs:code, ds:data</span><br><span class="line">main:</span><br><span class="line">    mov ax, data     ;\</span><br><span class="line">    mov ds, ax        ; &#x2F; ds:bx-&gt;t[0]</span><br><span class="line">    mov bx, offset t;&#x2F;</span><br><span class="line">    mov ecx, 8</span><br><span class="line">    mov eax, x</span><br><span class="line">next:</span><br><span class="line">    ; 首先取得前四位的内容，再用and只留下前四位的内容</span><br><span class="line">    ; 我感觉既然xlat使用的只是al寄存器，那么这句push pop可以省略？答案是不可以，因为al以8位为单位，而我们的程序以4位为单位</span><br><span class="line">    ; 但是程序在运行的过程中直接调用了int 21h的2号子功能，也就是在屏幕上输出一个字符，这个字符存储在dl中</span><br><span class="line">    ; 所以需要保护ah的内容，就使用了push和pop</span><br><span class="line">    rol eax, 4</span><br><span class="line">    push eax</span><br><span class="line">    and eax, 0Fh</span><br><span class="line">    xlat</span><br><span class="line">    mov ah, 2</span><br><span class="line">    mov dl, al</span><br><span class="line">    int 21h</span><br><span class="line">    pop eax</span><br><span class="line">    sub ecx, 1</span><br><span class="line">    jnz next</span><br><span class="line">    mov ah, 4Ch</span><br><span class="line">    int 21h</span><br><span class="line">code ends</span><br><span class="line">end main</span><br></pre></td></tr></table></figure>
+
+<h2 id="几种调用方式-cdecl-pascall-stdcall"><a href="#几种调用方式-cdecl-pascall-stdcall" class="headerlink" title="几种调用方式(__cdecl, __pascall, __stdcall)"></a>几种调用方式(<code>__cdecl, __pascall, __stdcall</code>)</h2><h3 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h3><p>stdcall、cdecl和__fastcall是三种函数调用协议，函数调用协议会影响函数参数的入栈方式、栈内数据的清除方式、编译器函数名的修饰规则等。</p>
+<h3 id="二、调用协议常用场合"><a href="#二、调用协议常用场合" class="headerlink" title="二、调用协议常用场合"></a>二、调用协议常用场合</h3><p>__stdcall：Windows API默认的函数调用协议。</p>
+<p> __cdecl：C/C++默认的函数调用协议。</p>
+<p>__fastcall：适用于对性能要求较高的场合。</p>
+<h3 id="三、-函数参数入栈方式"><a href="#三、-函数参数入栈方式" class="headerlink" title="三、 函数参数入栈方式"></a>三、 函数参数入栈方式</h3><p>__stdcall：函数参数由右向左入栈。</p>
+<p> __cdecl：函数参数由右向左入栈。</p>
+<p> __fastcall：从左开始不大于4字节的参数放入CPU的ECX和EDX寄存器，其余参数从右向左入栈。</p>
+<h3 id="四、栈内数据清除方式"><a href="#四、栈内数据清除方式" class="headerlink" title="四、栈内数据清除方式"></a>四、栈内数据清除方式</h3><p>__stdcall：函数调用结束后由被调用函数清除栈内数据。</p>
+<p>__cdecl：函数调用结束后由函数调用者清除栈内数据。</p>
+<p>__fastcall：函数调用结束后由被调用函数清除栈内数据。</p>
+<h3 id="五、常见问题"><a href="#五、常见问题" class="headerlink" title="五、常见问题"></a>五、常见问题</h3><ol>
+<li>__fastcall在寄存器中放入不大于4字节的参数，故性能较高，适用于需要高性能的场合。</li>
+<li>不同编译器设定的栈结构不尽相同，跨开发平台时由函数调用者清除栈内数据不可行。</li>
+<li>某些函数的参数是可变的，如printf函数，这样的函数只能由函数调用者清除栈内数据。</li>
+<li>由调用者清除栈内数据时，每次调用都包含清除栈内数据的代码，故可执行文件较大。</li>
+</ol>
+<h3 id="六、C语言编译器函数名称修饰规则"><a href="#六、C语言编译器函数名称修饰规则" class="headerlink" title="六、C语言编译器函数名称修饰规则"></a>六、C语言编译器函数名称修饰规则</h3><p>__stdcall：编译后，函数名被修饰为”_functionname@number”。</p>
+<p>__cdecl：编译后，函数名被修饰为”_functionname”。</p>
+<p>__fastcall：编译后， 函数名给修饰为”@functionname@nmuber”。</p>
+<p>注：”functionname”为函数名，”number”为参数字节数。</p>
+<p>注：函数实现和函数定义时如果使用了不同的函数调用协议，则无法实现函数调用。</p>
+<h3 id="七、C-语言编译器函数名称修饰规则"><a href="#七、C-语言编译器函数名称修饰规则" class="headerlink" title="七、C++语言编译器函数名称修饰规则"></a>七、C++语言编译器函数名称修饰规则</h3><p>__stdcall：编译后，函数名被修饰为”?functionname@@YG@Z”。</p>
+<p>__cdecl：编译后，函数名被修饰为”?functionname@@YA@Z”。</p>
+<p>__fastcall：编译后，函数名被修饰为”?functionname@@YI@Z”。</p>
+<p>注：””为函数返回值类型和参数类型表。</p>
+<p> 注：函数实现和函数定义时如果使用了不同的函数调用协议，则无法实现函数调用。 C语言和C++语言间如果不进行特殊处理，也无法实现函数的互相调用。</p>
+<h2 id="混合编程相关"><a href="#混合编程相关" class="headerlink" title="混合编程相关"></a>混合编程相关</h2><h3 id="Visual-Studio下经过检验的"><a href="#Visual-Studio下经过检验的" class="headerlink" title="Visual Studio下经过检验的"></a>Visual Studio下经过检验的</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//#include "stdafx.h"</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line">__declspec(naked) <span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    __asm</span><br><span class="line">    &#123;</span><br><span class="line">         push ebp</span><br><span class="line">         mov ebp, esp</span><br><span class="line">         mov eax, [ebp+<span class="number">8</span>]</span><br><span class="line">         add eax, [ebp+<span class="number">0x0C</span>]</span><br><span class="line">         mov esp, ebp</span><br><span class="line">         pop ebp</span><br><span class="line">         ret</span><br><span class="line">    &#125;     </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>, f(<span class="number">100</span>,<span class="number">200</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 值得注意的是，stdafx是预编译头，一般用于整个工程的头文件定义</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">1.包含标准头文件 ,就是这个头文件包含标准C的头文件，例如：stdio.h、string.h这些，这种做法实际在我们项目中很常见，把大部分.c文件需要的头文件，放在一个头文件中，这样只有include这一个头文件就行，省事</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">2.包含项目中的不会轻易改动的头文件</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/01/14/Assembly/image-20200114152923627.png" alt="image-20200114152923627"></p>
+<h3 id="其他平台的混合编程方法"><a href="#其他平台的混合编程方法" class="headerlink" title="其他平台的混合编程方法"></a>其他平台的混合编程方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">1. TC中内嵌汇编: asmtest.c</span><br><span class="line">&#x2F;*</span><br><span class="line">编译步骤:</span><br><span class="line">(1)把tasm.exe拷到tc文件夹内</span><br><span class="line">(2)dos窗口输入以下命令编译:</span><br><span class="line">   TCC asmtest.c</span><br><span class="line">*&#x2F;</span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">  int a&#x3D;10, b&#x3D;20, c;</span><br><span class="line">  asm mov ax, a</span><br><span class="line">  asm add ax, b</span><br><span class="line">  asm mov c, ax</span><br><span class="line">  printf(&quot;c&#x3D;%d\n&quot;, c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">2. VC中内嵌汇编</span><br><span class="line"></span><br><span class="line">#include &quot;stdafx.h&quot;</span><br><span class="line">__declspec(naked) int f(int a, int b)</span><br><span class="line">&#123;</span><br><span class="line">  __asm</span><br><span class="line">  &#123;</span><br><span class="line">     push ebp</span><br><span class="line">     mov ebp, esp</span><br><span class="line">     mov eax, [ebp+8]</span><br><span class="line">     add eax, [ebp+0x0C]</span><br><span class="line">     mov esp, ebp</span><br><span class="line">     pop ebp</span><br><span class="line">     ret</span><br><span class="line">  &#125;   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  int y;</span><br><span class="line">  y &#x3D; f(10, 20);</span><br><span class="line">  printf(&quot;%d\n&quot;, y);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">3. 先用masm32编译called.asm, 再用VC调用其中的函数f()</span><br><span class="line">3.1 called.asm</span><br><span class="line"></span><br><span class="line">;编译步骤:</span><br><span class="line">;(1)用qeditor打开called.asm</span><br><span class="line">;(2)Project-&gt;Assemble ASM file</span><br><span class="line">.386</span><br><span class="line">.model flat, stdcall</span><br><span class="line">option casemap :none</span><br><span class="line">public f</span><br><span class="line">.code</span><br><span class="line">f:</span><br><span class="line">   push ebp</span><br><span class="line">   mov ebp, esp</span><br><span class="line">   mov eax, [ebp+8]</span><br><span class="line">   add eax, [ebp+0Ch]</span><br><span class="line">   pop ebp</span><br><span class="line">   ret</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">3.2 callasm.cpp</span><br><span class="line"></span><br><span class="line">&#x2F;* 编译步骤:</span><br><span class="line">(1) 把masm32\called.obj拷到VC当前工程文件夹内</span><br><span class="line">(2) Project-&gt;Add To Project-&gt;Files-&gt;文件类型选择Object Files-&gt;called.obj</span><br><span class="line">(3) Build-&gt;Rebuild ALL</span><br><span class="line">*&#x2F;</span><br><span class="line">#include &quot;stdafx.h&quot;</span><br><span class="line">extern &quot;C&quot; int f(int a, int b); &#x2F;* 此处声明函数f()是一个纯C函数，而非C++函数 *&#x2F;</span><br><span class="line">&#x2F;*</span><br><span class="line">替换(2)的另外一个方案是: </span><br><span class="line">先用LIB命令把called.obj加到mylib.lib:  LIB &#x2F;out:mylib.lib called.obj</span><br><span class="line">再在此处插入以下语句,目的是告诉linker到mylib.lib中搜索源代码中找不到的函数的机器码</span><br><span class="line">#pragma comment(lib, &quot;mylib.lib&quot;)</span><br><span class="line">*&#x2F;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">  int y;</span><br><span class="line">  y &#x3D; f(10, 20);</span><br><span class="line">  printf(&quot;y&#x3D;%d\n&quot;, y);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="考试重点"><a href="#考试重点" class="headerlink" title="考试重点"></a>考试重点</h2><p>不能带计算器</p>
+<p>一、是非题(10个，每题1分，共10分)</p>
+<p>二、填空(15个，每空2分，共30分)</p>
+<p>三、按要求写出指令(4题，每题5分，共20分)</p>
+<p>四、程序填空题(3题，每题10分，共30分)</p>
+<p>五、程序阅读(2题，每题5分，共10分)</p>
+<p>进制转换：十进制ßà十六进制，十进制ßà二进制</p>
+<p>二进制ßà十六进制</p>
+<p>逻辑地址ßà物理地址</p>
+<p>标志位：CF、ZF、OF、SF、DF、IF</p>
+<p>数据在内存中的存放规律：低字节在前，高字节在后。</p>
+<p>寄存器：AX BX CX DX SI DI SP BP CS DS ES SS</p>
+<p>​     IP FL</p>
+<p>间接寻址: BX  BP SI  DI </p>
+<p>缺省段址：ds和ss</p>
+<p>指令：</p>
+<p>xchg, push, pop, pushf, popf, lea, cbw, cwd, </p>
+<p>add, adc, sub, sbb, inc, dec</p>
+<p>mul, div, xlat</p>
+<p>and, or, xor, not, neg</p>
+<p>shl, shr,  sal, sar, rol, ror, rcl, rcr</p>
+<p>cmp, </p>
+<p>jxx(条件跳转指令): ja, jb , jae, jbe, </p>
+<p>jg jl jge jle jc jnc je  jne  jz jnz jcxz</p>
+<p>js jns jo  jno </p>
+<p>loop</p>
+<p>clc stc cli sti cld std</p>
+<p>call, ret(近调用和近返回), int, iret</p>
+<p>mov  jmp</p>
+<p>字符串指令：repne scasb, repe scasb,</p>
+<p>rep movsb, lodsb, stosb, rep stosb</p>
+<p>用堆栈传递参数时, 如何用[bp+?]实现对参数的引用</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://dendenxu.github.io/2020/01/13/core/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2424,282 +3236,12 @@ graph TD
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://dendenxu.github.io/2019/12/19/%E9%A9%AC%E5%8E%9F%E5%88%92%E9%87%8D%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="dendenxu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dendenxu">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/12/19/%E9%A9%AC%E5%8E%9F%E5%88%92%E9%87%8D%E7%82%B9/" class="post-title-link" itemprop="url">马原划重点</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2019-12-19 13:18:05" itemprop="dateCreated datePublished" datetime="2019-12-19T13:18:05+08:00">2019-12-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-01-11 20:22:36" itemprop="dateModified" datetime="2020-01-11T20:22:36+08:00">2020-01-11</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="马原划重点"><a href="#马原划重点" class="headerlink" title="马原划重点"></a>马原划重点</h1><p>原则是这两三年处过的题目不重复考</p>
-<p>那么考什么是不是明朗了</p>
-<p>马原课是全校公共课，肯定不会出的太细，或者太专业</p>
-<p>这是出过的：</p>
-<h2 id="政治经济学"><a href="#政治经济学" class="headerlink" title="政治经济学"></a>政治经济学</h2><h3 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h3><p>劳动价值论出过</p>
-<p>经济危机出过</p>
-<p>意识形态不考</p>
-<h3 id="第五章"><a href="#第五章" class="headerlink" title="第五章"></a>第五章</h3><p>新变化出过</p>
-<p>经济全球化出过</p>
-<p>剩下的就是两道大题了，要么A卷要么B卷</p>
-<p>答题的时候论述题还是多写一些，不能没有标准答案的字数多</p>
-<h2 id="第六第七章不考"><a href="#第六第七章不考" class="headerlink" title="第六第七章不考"></a>第六第七章不考</h2><h2 id="选择题40分"><a href="#选择题40分" class="headerlink" title="选择题40分"></a>选择题40分</h2><h2 id="前三章-哲学-也有三个大题目"><a href="#前三章-哲学-也有三个大题目" class="headerlink" title="前三章 哲学 也有三个大题目"></a>前三章 哲学 也有三个大题目</h2><h2 id="平时成绩占据60"><a href="#平时成绩占据60" class="headerlink" title="平时成绩占据60%"></a>平时成绩占据60%</h2><h2 id="写错了用括号括一下就好"><a href="#写错了用括号括一下就好" class="headerlink" title="写错了用括号括一下就好"></a>写错了用括号括一下就好</h2><p>不准用胶带等奇奇怪怪的东西，不准划来划去</p>
-<h1 id="一些问题的整理"><a href="#一些问题的整理" class="headerlink" title="一些问题的整理"></a>一些问题的整理</h1><h2 id="什么是马克思主义，如何理解其基本精神和本质特征"><a href="#什么是马克思主义，如何理解其基本精神和本质特征" class="headerlink" title="什么是马克思主义，如何理解其基本精神和本质特征"></a>什么是马克思主义，如何理解其基本精神和本质特征</h2><p>狭义上，马克思和恩格斯创立的基本理论基本观点和学说体系</p>
-<p>广义上，不仅指上述内容，还包括继承者对他的发展，即实践中不断演进发展的马克思主义</p>
-<p>推到新时代，有毛泽东，江泽民，胡锦涛等中国共产党人将其与中国具体实际相结合</p>
-<p>作为中国共产党和社和主义事业指导思想的马克思主义就是广义的马克思主义</p>
-<p>马克思主义的基本精神：在尊重客观规律的基础上，为绝大多数人谋利益</p>
-<p>本质特征：实践的基础上革命性和科学性的高度统一</p>
-<p>如何理解：</p>
-<ol>
-<li>辩证唯物主义和历史唯物主义是马克思主义的最基本的世界观和方法论</li>
-<li>马克思主义政党的一切理论和奋斗都应致力于实现以劳动人民为主体的最广大人民的根本利益</li>
-<li>坚持一切从实际出发，理论联系实际，实事求是，实践中检验和发展真理，是马克思主义最重要的理论品质</li>
-<li>物质极大丰富，精神境界极大提高每个人自由全面发展的共产社会主义是马克思主义的最崇高的社会理想</li>
-</ol>
-<h2 id="哲学的最基本问题"><a href="#哲学的最基本问题" class="headerlink" title="哲学的最基本问题"></a>哲学的最基本问题</h2><p>认识世界和改造世界过程中经常遇到的问题，实际活动中的基本问题</p>
-<ol>
-<li>意识和物质，精神和自然界，究竟谁是世界的本原，物质和精神何者是第一性</li>
-<li>我们关于我们周围世界的思想对这个世界的关系是怎样的，我们的思维能不能正确的认识现实世界，能不能在关于现实世界的表象和概念中正确的反映现实，思维能否认识或者正确认识存在</li>
-</ol>
-<h2 id="唯物主义与唯心主义的发展历程"><a href="#唯物主义与唯心主义的发展历程" class="headerlink" title="唯物主义与唯心主义的发展历程"></a>唯物主义与唯心主义的发展历程</h2><p>唯物主义</p>
-<ol>
-<li>古代朴素唯物主义</li>
-<li>机械唯物主义</li>
-<li>辩证唯物主义和历史唯物主义</li>
-</ol>
-<p>唯心主义</p>
-<ol>
-<li>主观唯心主义</li>
-<li>客观唯心主义</li>
-</ol>
-<h2 id="什么是物质、意识、坚持世界的物质统一性原理有何意义"><a href="#什么是物质、意识、坚持世界的物质统一性原理有何意义" class="headerlink" title="什么是物质、意识、坚持世界的物质统一性原理有何意义"></a>什么是物质、意识、坚持世界的物质统一性原理有何意义</h2><p>物质是不依赖于人的意识，并能为人的意识所反映的客观实在，唯一特性是客观实在性</p>
-<p>意识是物质世界长期发展的产物，是人脑的机能和属性，是物质世界的主观映像</p>
-<p>坚持世界的物质统一性原理的意义：有助于从根本上理解思考解决问题，本原是物质不仅自然界也包括人类世界。</p>
-<p>要通过实践改变世界，就需要正确认识和利用客观规律</p>
-<p>物质世界的统一性原理是马克思主义哲学的基石，一切从实际出发是唯物主义一元论的根本要求</p>
-<h2 id="质变量变、对立统一、否定之否定"><a href="#质变量变、对立统一、否定之否定" class="headerlink" title="质变量变、对立统一、否定之否定"></a>质变量变、对立统一、否定之否定</h2><p>对立统一：矛盾的同一性和斗争性是相互联结相辅相成的</p>
-<p>无条件的绝对斗争性和有条件的相对的同一性相结合，构成事物的矛盾运动</p>
-<p>对立统一规律的理解：</p>
-<p>是唯物辩证法体系的核心和实质</p>
-<ol>
-<li><p>揭示了事物普遍联系的根本内容和永恒发展的内在动力</p>
-<p>根本上回答了事物为什么会发展的问题</p>
-</li>
-<li><p>是否承认事物内部矛盾是辩证法与形而上学的根本区别，因而是否承认对立统一规律是区分辩证法与形而上学的试金石</p>
-</li>
-</ol>
-<p>质变量变互换规律：</p>
-<p>质：一个事务区别去其他事物的内在规定性</p>
-<p>量：可以用数量关系表示的规定性</p>
-<p>度：保持事物稳定性的数量界限</p>
-<p>超出度的范围，一物便会转化为另一物</p>
-<p>否定之否定规律：</p>
-<p>事物内部均有肯定及否定因素，肯定因素维持事物存在，否定因素促进事物灭亡</p>
-<p>三个阶段：肯定-否定-否定之否定，是一个扬弃的过程</p>
-<h2 id="实践及其地位"><a href="#实践及其地位" class="headerlink" title="实践及其地位"></a>实践及其地位</h2><p>实践是人类能动的认识世界和改造世界的客观物质性活动，实践活动是以改造客观世界为目的，主体和客体之间通过一定的中介发生作用的相互过程</p>
-<p>地位：马克思主义的实践观，揭示了自然界和社会的物质统一性，阐明了实践在人类社会生活中的根本地位，是马克思主义社会历史观的基础</p>
-<h2 id="认识？认识与实践、感性认识和理性认识的辩证关系"><a href="#认识？认识与实践、感性认识和理性认识的辩证关系" class="headerlink" title="认识？认识与实践、感性认识和理性认识的辩证关系"></a>认识？认识与实践、感性认识和理性认识的辩证关系</h2><p>认识是主体在实践的基础上对客体的能动反映</p>
-<p>认识与实践的关系：</p>
-<ol>
-<li>实践是认识的基础</li>
-<li>实践和认识总是相互作用的，特别是反应客观事物本质和规律性的理性认识，对之间有着巨大的指导意义</li>
-</ol>
-<p>感性认识与理性认识：</p>
-<ol>
-<li>理性认识依赖于感性认识</li>
-<li>感性认识有待于发展和深化为理性认识</li>
-<li>感性认识和理性认识相互渗透</li>
-</ol>
-<h2 id="真理，绝对，相对，价值，价值评价的意义"><a href="#真理，绝对，相对，价值，价值评价的意义" class="headerlink" title="真理，绝对，相对，价值，价值评价的意义"></a>真理，绝对，相对，价值，价值评价的意义</h2><p>真理：人们对客观事物及其规律的正确认识，具有一元性，客观性</p>
-<p>绝对真理：无条件，无限制正确的真理，与谬误有原则的界限</p>
-<p>相对真理：认识范围有限，产生的有条件的、有限制的真理，在范围上和正确程度上有限的真理</p>
-<p>价值：是人们在实践中所必须遵守的、以满足人们需求为内容的，特定的实践目标</p>
-<p>价值评价：关于价值现象的认识活动，阐述了外部事物对于人的需求满足与否的关系</p>
-<h2 id="认识的客观尺度和主题尺度"><a href="#认识的客观尺度和主题尺度" class="headerlink" title="认识的客观尺度和主题尺度"></a>认识的客观尺度和主题尺度</h2><p>客观尺度和主体尺度在人的活动中的表现是真理原则和价值原则</p>
-<p>真理原则和价值原则辩证统一：</p>
-<p>真理原则体现客观尺度的要求，要求人们在认识真理的过程中按照世界的本来面目及其规律进行实践活动，而不能考虑人的主题需要和利益</p>
-<h2 id="社会存在和社会意识的辩证关系"><a href="#社会存在和社会意识的辩证关系" class="headerlink" title="社会存在和社会意识的辩证关系"></a>社会存在和社会意识的辩证关系</h2><p>是社会历史观的基本问题</p>
-<p>社会存在：社会生活的物质方面，社会生活资料的生产以及生产方式</p>
-<p>社会意识：社会生活的精神方面，是社会存在的反映</p>
-<p>分为 个人意识，群体意识</p>
-<p>社会心理，社会意识形态</p>
-<p>上层建筑的意识形式以及非上层建筑的意识形式</p>
-<p>社会存在决定社会意识，社会意识是社会存在的反应并反作用于社会存在。社会意识的产生基础是人类社会实践，起源于社会存在</p>
-<p>辩证关系的具体表现：</p>
-<ol>
-<li>社会意识内容的客观来源是社会存在</li>
-<li>社会意识是是社会物质交往的结果</li>
-<li>社会意识的存在具有相对独立性</li>
-<li>社会意识的能动性是通过指导人的实践实现的</li>
-</ol>
-<h2 id="生产力-生产关系-经济基础-上层建筑"><a href="#生产力-生产关系-经济基础-上层建筑" class="headerlink" title="生产力 生产关系 经济基础 上层建筑"></a>生产力 生产关系 经济基础 上层建筑</h2><ol>
-<li><p>生产力是人类在生产实践中形成的改造自然影响自然使其适应社会的物质力量</p>
-</li>
-<li><p>生产关系是人们在物质生活中形成的不以人的意识形态为转移的经济关系</p>
-</li>
-<li><p>辩证关系：</p>
-<p>生产力是生产的物质内容，生产关系是生产的社会形势，二者的有机结合和统一，构成社会的生产方式</p>
-<ol>
-<li>生产力决定生产关系，生产力占据支配地位</li>
-<li>生产关系对生产力具有能动作用</li>
-</ol>
-</li>
-</ol>
-<p>经济基础是指社会有一定的发展阶段的生产力所决定的生产关系的总和</p>
-<p>上层建筑是建立在一定的经济基础之上的意识形态及其相应制度等</p>
-<p>经济基础决定上层建筑，</p>
-<p>上层建筑对经济基础具有反作用。</p>
-<h2 id="科学技术及其本质和社会功能"><a href="#科学技术及其本质和社会功能" class="headerlink" title="科学技术及其本质和社会功能"></a>科学技术及其本质和社会功能</h2><p>科学技术是一个复合的概念</p>
-<p>科学指的是对客观世界的认识，是反映客观事实和客观规律的知识体系及其相关的活动</p>
-<p>技术有广义和狭义</p>
-<ul>
-<li>广义：生产技术和非生产技术</li>
-<li>狭义：生产技术：人类改造自然进行生产的方法与手段</li>
-</ul>
-<p>本质：科学技术是一种生产力，体现在其实践性</p>
-<p>社会功能:</p>
-<ul>
-<li>科学技术是社会发展的重要动力，是第一生产力</li>
-<li>对生产方式、生活方式、思维方式产生了巨大的影响</li>
-</ul>
-<h2 id="文化的内涵和在马克思主义中的作用"><a href="#文化的内涵和在马克思主义中的作用" class="headerlink" title="文化的内涵和在马克思主义中的作用"></a>文化的内涵和在马克思主义中的作用</h2><p>文化：一个国家或民族的历史、地理风土人情、传统习俗，行为规范，思维方式，价值观念等</p>
-<p>国情分析的作用和地位：马克思主义是中国特色社会主义文化的核心</p>
-<p>目的在于培养，有理想有道德有文化有纪律的社会主义公民</p>
-<p>体现了马克思主义以人为本的价值观。</p>
-<p>马克思主义是中国特色社会主义的指导思想</p>
-<p>先进文化是人类文明进步的结晶。</p>
-<h2 id="人类社会发展的基本动力"><a href="#人类社会发展的基本动力" class="headerlink" title="人类社会发展的基本动力"></a>人类社会发展的基本动力</h2><p>社会基本矛盾是人类社会发展的基本动力</p>
-<p>生产力是社会基本矛盾中最基本的动力因素。</p>
-<p>是人类社会发展和进步的最终决定力量。</p>
-<p>生产力是社会存在和发展的物质基础，决定生产力与生产关系的矛盾，进而决定经济基础和上层建筑的矛盾</p>
-<h2 id="资本积累理论及其现实意义"><a href="#资本积累理论及其现实意义" class="headerlink" title="资本积累理论及其现实意义"></a>资本积累理论及其现实意义</h2><p>剩余价值的资本化就是资本积累（或者说剩余价值转化为资本）</p>
-<p>资本主义扩大再生产的前提条件</p>
-<p>积累的实质是用暴力剥夺直接生产者，使生产资料与生产劳动者分离开</p>
-<p>货币财富在资本家手中迅速积累，作用是为资本主义生产方式的形成奠定了基础</p>
-<p>现实意义：</p>
-<p>马克思主义关于资本积累的学说是剩余价值论的重要组成部分，揭露了资本主义下两极分化的原因。揭示了资本主义失业现象的本质</p>
-<!-- 注意新变化已经考过了，不会再出题  -->
-
-<h2 id="当代资本主义有何新变化，如何评价"><a href="#当代资本主义有何新变化，如何评价" class="headerlink" title="当代资本主义有何新变化，如何评价"></a>当代资本主义有何新变化，如何评价</h2><ol>
-<li>生产资料所有制的变化：<ul>
-<li>个人所有制到私人股份所有制</li>
-<li>法人资本到国家所有制</li>
-<li>国内资本到跨国资本所有制</li>
-</ul>
-</li>
-<li>劳资关系与分配关系的变化<ul>
-<li>劳资关系缓和</li>
-<li>工人工资明显提高</li>
-</ul>
-</li>
-<li>社会阶级结构的变化<ul>
-<li>资本家不在直接经营企业</li>
-<li>反而成为资本的食利者</li>
-<li>高级职业经理成为大公司的实际控制者</li>
-<li>知识型和服务性的劳动者数量增加</li>
-<li>劳动方式发生变化</li>
-<li>中产阶级壮大，社会结构稳定</li>
-</ul>
-</li>
-</ol>
-<h2 id="“资本主义从来到世间，从头到脚，每个毛孔都滴着血和肮脏的东西”"><a href="#“资本主义从来到世间，从头到脚，每个毛孔都滴着血和肮脏的东西”" class="headerlink" title="“资本主义从来到世间，从头到脚，每个毛孔都滴着血和肮脏的东西”"></a>“资本主义从来到世间，从头到脚，每个毛孔都滴着血和肮脏的东西”</h2><p>资本主义的发展史就是列强掠夺弱国，资本剥削劳动的历史</p>
-<ol>
-<li>自由竞争时代，列强用坚船利炮世界范围内开辟殖民地</li>
-<li>二战后，利用发展中国家大规模工业化的机会，扩大资本的世界市场</li>
-<li>当今全球化进程中，利用控制的国际经济组织，指定国际游戏规则</li>
-</ol>
-<h2 id="垄断？为什么垄断没有消除竞争"><a href="#垄断？为什么垄断没有消除竞争" class="headerlink" title="垄断？为什么垄断没有消除竞争"></a>垄断？为什么垄断没有消除竞争</h2><p>垄断指的是少数资本主义大企业为了高额利润，通过协议与联合对一个或几个部门的生产销售和价格，进行操纵和可控制</p>
-<p>垄断的产生原因：</p>
-<ol>
-<li>生产发展到相当高程度，企业会联合操纵控制各部门之间的生产销售等，以获得更高的利润</li>
-<li>企业规模巨大会形成对竞争的限制</li>
-<li>激烈的竞争会带来巨大的损失，为避免两败俱伤，达成妥协，联合起来进行垄断</li>
-</ol>
-<p>垄断不消除竞争反而加重：</p>
-<ol>
-<li><p>垄断没有消除产生竞争的经济基础</p>
-</li>
-<li><p>垄断必须通过竞争来维持，否则就会面临更强的外界对手和压力，来巩固垄断地位</p>
-</li>
-<li><p>社会是复杂多样的，无法做到包罗万象</p>
-<p>所以会有内部外部的各种竞争现象存在</p>
-</li>
-</ol>
-<h2 id="国家垄断资本主义的形式"><a href="#国家垄断资本主义的形式" class="headerlink" title="国家垄断资本主义的形式"></a>国家垄断资本主义的形式</h2><ol>
-<li><p>国家所有并直接经营的企业</p>
-<p>满足国家自身需要的企业，提供公共产品的企业</p>
-</li>
-<li><p>国家与私人共有、合营的企业</p>
-<p>出售股权，转入承包</p>
-</li>
-<li><p>多种形式参私人垄断资本的再生过程</p>
-<p>例如订购大量的产品</p>
-</li>
-<li><p>宏观调节和微观调节</p>
-<p>限制垄断，保护竞争，维护公众的合法权益</p>
-</li>
-</ol>
-<h2 id="资本输出的实质"><a href="#资本输出的实质" class="headerlink" title="资本输出的实质"></a>资本输出的实质</h2><p>向世界范围拓展的主要动因在于：</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
 
 
 
@@ -2764,7 +3306,7 @@ graph TD
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
